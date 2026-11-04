@@ -1,10 +1,10 @@
 import { BankDetails } from '../types/rifa';
 
 export const BANK_DETAILS: BankDetails = {
-  alias: 'ALICARI.FOTO.MP',
-  cbu: '0000003100045892019384',
-  titular: 'Agustín Licari',
-  banco: 'Mercado Pago / Banco Galicia',
+  alias: 'multimedia.alicari',
+  cbu: '0000168300000003449747',
+  titular: 'Agustin Licari',
+  banco: 'Lemon',
   cuit: '20-36894512-9',
 };
 
