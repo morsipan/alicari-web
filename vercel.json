@@ -3,26 +3,6 @@
   "trailingSlash": false,
   "rewrites": [
     {
-      "source": "/rifa/safe/gestion",
-      "destination": "/rifa.html"
-    },
-    {
-      "source": "/rifa/safe/gestion/",
-      "destination": "/rifa.html"
-    },
-    {
-      "source": "/rifa/(.*)",
-      "destination": "/rifa.html"
-    },
-    {
-      "source": "/rifa",
-      "destination": "/rifa.html"
-    },
-    {
-      "source": "/comprobante",
-      "destination": "/rifa.html"
-    },
-    {
       "source": "/animate",
       "destination": "/animate/index.html"
     },

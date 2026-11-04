@@ -14,6 +14,8 @@ import {
   ArrowLeft,
   DollarSign,
   Lock,
+  Eye,
+  EyeOff,
 } from 'lucide-react';
 import { supabase } from '../../lib/supabaseClient';
 import { Ticket, Participante } from '../../types/rifa';
@@ -31,6 +33,7 @@ export const AdminView: React.FC<AdminViewProps> = ({ onBackToGrid }) => {
   });
   const [pinInput, setPinInput] = useState('');
   const [pinError, setPinError] = useState(false);
+  const [showPin, setShowPin] = useState(false);
 
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [participantesMap, setParticipantesMap] = useState<Record<string, Participante>>({});
@@ -287,16 +290,24 @@ export const AdminView: React.FC<AdminViewProps> = ({ onBackToGrid }) => {
                 <KeyRound className="w-4 h-4 text-neutral-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
                 <input
                   id="admin-pin"
-                  type="password"
+                  type={showPin ? 'text' : 'password'}
                   value={pinInput}
                   onChange={(e) => {
                     setPinInput(e.target.value);
                     setPinError(false);
                   }}
                   placeholder="Introduce tu clave"
-                  className="w-full pl-10 pr-3.5 py-2.5 text-sm rounded-xl bg-neutral-950 border border-neutral-800 text-white placeholder-neutral-500 focus:outline-none focus:border-red-600"
+                  className="w-full pl-10 pr-10 py-2.5 text-sm rounded-xl bg-neutral-950 border border-neutral-800 text-white placeholder-neutral-500 focus:outline-none focus:border-red-600"
                   autoFocus
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPin(!showPin)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-neutral-300 transition-colors p-1"
+                  title={showPin ? 'Ocultar clave' : 'Mostrar clave'}
+                >
+                  {showPin ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
               </div>
               {pinError && (
                 <p className="text-xs text-red-400 mt-1.5 flex items-center gap-1">

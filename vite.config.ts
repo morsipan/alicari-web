@@ -44,6 +44,8 @@ export default defineConfig({
       input: {
         main: path.resolve(__dirname, 'index.html'),
         rifa: path.resolve(__dirname, 'rifa.html'),
+        rifaGestion: path.resolve(__dirname, 'rifa/safe/gestion/index.html'),
+        comprobante: path.resolve(__dirname, 'comprobante/index.html'),
         about: path.resolve(__dirname, 'about.html'),
         portfolio2027: path.resolve(__dirname, '2027/index.html'),
         portfolio2027b: path.resolve(__dirname, '2027b/index.html'),

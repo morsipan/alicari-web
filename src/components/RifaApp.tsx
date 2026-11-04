@@ -23,15 +23,18 @@ export const RifaApp: React.FC = () => {
     const isSafeGestion =
       pathname === '/rifa/safe/gestion' ||
       pathname.endsWith('/safe/gestion') ||
+      pathname.includes('/gestion') ||
       safeParam === 'gestion' ||
-      viewParam === 'safe/gestion';
+      viewParam === 'safe/gestion' ||
+      viewParam === 'admin' ||
+      adminParam === 'true';
 
     if (isSafeGestion) {
       setCurrentView('admin');
     } else if (tokenParam) {
       setActiveToken(tokenParam);
       setCurrentView('comprobante');
-    } else if (viewParam === 'comprobante') {
+    } else if (viewParam === 'comprobante' || pathname.endsWith('/comprobante') || pathname.includes('/comprobante')) {
       setCurrentView('comprobante');
     }
   }, []);
