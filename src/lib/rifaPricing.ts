@@ -59,3 +59,4 @@ export function formatCurrency(amount: number): string {
 export function formatNumber(num: number): string {
   return new Intl.NumberFormat('es-AR').format(num);
 }
+

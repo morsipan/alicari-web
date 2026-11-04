@@ -43,3 +43,4 @@ export interface BankDetails {
   banco: string;
   cuit: string;
 }
+

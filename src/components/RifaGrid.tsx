@@ -523,3 +523,4 @@ CREATE POLICY "Permitir select a todos" ON public.participantes FOR SELECT TO an
     </div>
   );
 };
+

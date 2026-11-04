@@ -11,3 +11,4 @@ export const BANK_DETAILS: BankDetails = {
 export const CONTACT_WHATSAPP = '5491168001234';
 export const VIATICOS_DISCLAIMER =
   'Acepto que la cobertura aplica a shows en vivo en CABA / GBA (o viáticos a coordinar si es en otra zona).';
+
