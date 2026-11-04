@@ -3,6 +3,18 @@
   "trailingSlash": false,
   "rewrites": [
     {
+      "source": "/rifa/safe/gestion",
+      "destination": "/rifa.html"
+    },
+    {
+      "source": "/rifa/safe/gestion/",
+      "destination": "/rifa.html"
+    },
+    {
+      "source": "/rifa/(.*)",
+      "destination": "/rifa.html"
+    },
+    {
       "source": "/rifa",
       "destination": "/rifa.html"
     },
@@ -40,6 +52,15 @@
     }
   ],
   "headers": [
+    {
+      "source": "/rifa(.*)",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow, noarchive"
+        }
+      ]
+    },
     {
       "source": "/ParishRobertson(.*)",
       "headers": [

@@ -23,7 +23,7 @@ interface AdminViewProps {
   onBackToGrid: () => void;
 }
 
-const ADMIN_PIN = 'alicari2026';
+const ADMIN_PIN = 'Astor2018+';
 
 export const AdminView: React.FC<AdminViewProps> = ({ onBackToGrid }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
@@ -272,16 +272,16 @@ export const AdminView: React.FC<AdminViewProps> = ({ onBackToGrid }) => {
           </div>
 
           <div className="space-y-1">
-            <h2 className="text-xl font-bold text-white tracking-tight">Panel de Administración</h2>
+            <h2 className="text-xl font-bold text-white tracking-tight">Gestión de la Rifa</h2>
             <p className="text-xs text-neutral-400">
-              Ingresa tu PIN de organizador para gestionar reservas y confirmar pagos
+              Ingresa la clave de acceso para administrar tickets y confirmar pagos
             </p>
           </div>
 
           <form onSubmit={handleLogin} className="space-y-4 text-left">
             <div>
               <label htmlFor="admin-pin" className="block text-xs font-bold uppercase tracking-wider text-neutral-400 mb-1.5">
-                PIN de Acceso
+                Clave de Acceso
               </label>
               <div className="relative">
                 <KeyRound className="w-4 h-4 text-neutral-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
@@ -293,7 +293,7 @@ export const AdminView: React.FC<AdminViewProps> = ({ onBackToGrid }) => {
                     setPinInput(e.target.value);
                     setPinError(false);
                   }}
-                  placeholder="Introduce tu PIN"
+                  placeholder="Introduce tu clave"
                   className="w-full pl-10 pr-3.5 py-2.5 text-sm rounded-xl bg-neutral-950 border border-neutral-800 text-white placeholder-neutral-500 focus:outline-none focus:border-red-600"
                   autoFocus
                 />
@@ -301,7 +301,7 @@ export const AdminView: React.FC<AdminViewProps> = ({ onBackToGrid }) => {
               {pinError && (
                 <p className="text-xs text-red-400 mt-1.5 flex items-center gap-1">
                   <AlertCircle className="w-3.5 h-3.5" />
-                  <span>PIN incorrecto. (Por defecto: alicari2026)</span>
+                  <span>Clave incorrecta. Por favor inténtalo de nuevo.</span>
                 </p>
               )}
             </div>
@@ -317,6 +317,12 @@ export const AdminView: React.FC<AdminViewProps> = ({ onBackToGrid }) => {
       </div>
     );
   }
+
+  const handleLogout = () => {
+    sessionStorage.removeItem('rifa_admin_auth');
+    setIsAuthenticated(false);
+    onBackToGrid();
+  };
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8 space-y-6 animate-fadeIn pb-24">
@@ -340,6 +346,14 @@ export const AdminView: React.FC<AdminViewProps> = ({ onBackToGrid }) => {
           >
             <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? 'animate-spin' : ''}`} />
             <span>Refrescar</span>
+          </button>
+          <button
+            onClick={handleLogout}
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-xl bg-neutral-800 hover:bg-neutral-700 text-neutral-300 transition-colors"
+            title="Cerrar sesión de gestión"
+          >
+            <Lock className="w-3.5 h-3.5" />
+            <span>Cerrar Sesión</span>
           </button>
           <button
             onClick={onBackToGrid}

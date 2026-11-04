@@ -5,7 +5,27 @@ import autoprefixer from 'autoprefixer'
 import path from 'path'
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    {
+      name: 'rifa-history-rewrite',
+      configureServer(server) {
+        server.middlewares.use((req, _res, next) => {
+          if (req.url) {
+            const [urlPath, query] = req.url.split('?');
+            if (
+              urlPath === '/rifa' ||
+              urlPath.startsWith('/rifa/') ||
+              urlPath === '/comprobante'
+            ) {
+              req.url = '/rifa.html' + (query ? `?${query}` : '');
+            }
+          }
+          next();
+        });
+      },
+    },
+  ],
   css: {
     postcss: {
       plugins: [
