@@ -4,6 +4,7 @@ module.exports = {
     "./index.html",
     "./about.html",
     "./contact.html",
+    "./rifa.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   corePlugins: {

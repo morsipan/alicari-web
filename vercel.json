@@ -3,6 +3,14 @@
   "trailingSlash": false,
   "rewrites": [
     {
+      "source": "/rifa",
+      "destination": "/rifa.html"
+    },
+    {
+      "source": "/comprobante",
+      "destination": "/rifa.html"
+    },
+    {
       "source": "/animate",
       "destination": "/animate/index.html"
     },
