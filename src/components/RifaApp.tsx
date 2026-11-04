@@ -18,6 +18,7 @@ export const RifaApp: React.FC = () => {
     const tokenParam = params.get('token');
     const viewParam = params.get('view');
     const safeParam = params.get('safe') || params.get('secret');
+    const adminParam = params.get('admin');
 
     // Acceso administrativo oculto y exclusivo bajo la URL /rifa/safe/gestion
     const isSafeGestion =
