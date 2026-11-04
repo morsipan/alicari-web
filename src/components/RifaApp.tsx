@@ -64,96 +64,108 @@ export const RifaApp: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black text-neutral-100 flex flex-col font-sans selection:bg-red-600 selection:text-white">
-      {/* Top Header - Sin enlaces externos a alicari.com.ar */}
-      <header className="sticky top-0 z-30 border-b border-neutral-800/80 bg-black/80 backdrop-blur-xl">
-        <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-          {/* Título de la Rifa desacoplado */}
-          <div className="flex items-center gap-2.5">
-            <span className="w-2.5 h-2.5 rounded-full bg-red-600 shadow-sm shadow-red-600/50" />
-            <span className="text-xs font-bold uppercase tracking-widest text-white">
-              Rifa Shows de Bandas
-            </span>
-          </div>
+    <div className="relative min-h-screen bg-black text-neutral-100 flex flex-col font-sans selection:bg-red-600 selection:text-white">
+      {/* Background Image de Shows con overlay negro al 50% */}
+      <div
+        className="fixed inset-0 z-0 bg-cover bg-center bg-no-repeat bg-fixed pointer-events-none"
+        style={{ backgroundImage: `url('/images/rifa-bg.jpg')` }}
+        aria-hidden="true"
+      >
+        <div className="absolute inset-0 bg-black/50" />
+      </div>
 
-          {/* Navegación Interna - Solo Grilla y Comprobante (Admin completamente oculto) */}
-          <nav className="flex items-center gap-1.5 p-1 rounded-xl bg-neutral-900 border border-neutral-800 text-xs">
-            <button
-              onClick={handleBackToGrid}
-              className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg transition-all ${
-                currentView === 'grid'
-                  ? 'bg-neutral-800 text-white font-semibold shadow-sm'
-                  : 'text-neutral-400 hover:text-white'
-              }`}
-            >
-              <TicketIcon className="w-3.5 h-3.5" />
-              <span>Grilla de Números</span>
-            </button>
-
-            <button
-              onClick={() => handleGoToComprobante(activeToken)}
-              className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg transition-all ${
-                currentView === 'comprobante'
-                  ? 'bg-neutral-800 text-white font-semibold shadow-sm'
-                  : 'text-neutral-400 hover:text-white'
-              }`}
-            >
-              <UploadCloud className="w-3.5 h-3.5" />
-              <span>Subir Comprobante</span>
-            </button>
-
-            {/* Indicador exclusivo si se accedió por la URL oculta /rifa/safe/gestion */}
-            {currentView === 'admin' && (
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-red-950/60 border border-red-800/60 text-red-400 text-xs font-semibold">
-                <Shield className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Modo Gestión</span>
+      {/* Contenedor principal por encima del fondo */}
+      <div className="relative z-10 flex flex-col min-h-screen">
+        {/* Top Header - Sin enlaces externos a alicari.com.ar */}
+        <header className="sticky top-0 z-30 border-b border-neutral-800/80 bg-black/75 backdrop-blur-xl">
+          <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+            {/* Título de la Rifa desacoplado */}
+            <div className="flex items-center gap-2.5">
+              <span className="w-2.5 h-2.5 rounded-full bg-red-600 shadow-sm shadow-red-600/50" />
+              <span className="text-xs font-bold uppercase tracking-widest text-white">
+                Rifa Shows de Bandas
               </span>
-            )}
-          </nav>
-        </div>
-      </header>
+            </div>
 
-      {/* Main View */}
-      <main className="flex-1">
-        {currentView === 'grid' && (
-          <RifaGrid
-            onContinue={handleStartBooking}
-            onGoToComprobante={handleGoToComprobante}
-          />
-        )}
+            {/* Navegación Interna - Solo Grilla y Comprobante (Admin completamente oculto) */}
+            <nav className="flex items-center gap-1.5 p-1 rounded-xl bg-neutral-900/90 backdrop-blur-md border border-neutral-800 text-xs">
+              <button
+                onClick={handleBackToGrid}
+                className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg transition-all ${
+                  currentView === 'grid'
+                    ? 'bg-neutral-800 text-white font-semibold shadow-sm'
+                    : 'text-neutral-400 hover:text-white'
+                }`}
+              >
+                <TicketIcon className="w-3.5 h-3.5" />
+                <span>Grilla de Números</span>
+              </button>
 
-        {currentView === 'comprobante' && (
-          <SubirComprobante
-            initialToken={activeToken}
-            onBackToGrid={handleBackToGrid}
-          />
-        )}
+              <button
+                onClick={() => handleGoToComprobante(activeToken)}
+                className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg transition-all ${
+                  currentView === 'comprobante'
+                    ? 'bg-neutral-800 text-white font-semibold shadow-sm'
+                    : 'text-neutral-400 hover:text-white'
+                }`}
+              >
+                <UploadCloud className="w-3.5 h-3.5" />
+                <span>Subir Comprobante</span>
+              </button>
 
-        {currentView === 'admin' && (
-          <AdminView onBackToGrid={handleBackToGrid} />
-        )}
-      </main>
+              {/* Indicador exclusivo si se accedió por la URL oculta /rifa/safe/gestion */}
+              {currentView === 'admin' && (
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-red-950/70 border border-red-800/60 text-red-400 text-xs font-semibold">
+                  <Shield className="w-3.5 h-3.5" />
+                  <span className="hidden sm:inline">Modo Gestión</span>
+                </span>
+              )}
+            </nav>
+          </div>
+        </header>
 
-      {/* Modal de Checkout / Reserva / Datos bancarios */}
-      <CheckoutModal
-        isOpen={isCheckoutOpen}
-        onClose={() => setIsCheckoutOpen(false)}
-        selectedNumbers={selectedNumbersForBooking}
-        totalPrice={bookingTotalPrice}
-        onGoToComprobante={handleGoToComprobante}
-      />
+        {/* Main View */}
+        <main className="flex-1">
+          {currentView === 'grid' && (
+            <RifaGrid
+              onContinue={handleStartBooking}
+              onGoToComprobante={handleGoToComprobante}
+            />
+          )}
 
-      {/* Footer aislado sin enlaces de retorno ni accesos de admin */}
-      <footer className="border-t border-neutral-800 bg-neutral-950/60 py-8 px-4 text-center text-xs text-neutral-500">
-        <div className="max-w-4xl mx-auto space-y-2">
-          <p className="text-neutral-400 font-medium">
-            Cobertura Audiovisual y Fotográfica de Shows en Vivo
-          </p>
-          <p>
-            Rifa de 100 números únicos (00 al 99). Sorteo programado al completar la totalidad de los tickets.
-          </p>
-        </div>
-      </footer>
+          {currentView === 'comprobante' && (
+            <SubirComprobante
+              initialToken={activeToken}
+              onBackToGrid={handleBackToGrid}
+            />
+          )}
+
+          {currentView === 'admin' && (
+            <AdminView onBackToGrid={handleBackToGrid} />
+          )}
+        </main>
+
+        {/* Modal de Checkout / Reserva / Datos bancarios */}
+        <CheckoutModal
+          isOpen={isCheckoutOpen}
+          onClose={() => setIsCheckoutOpen(false)}
+          selectedNumbers={selectedNumbersForBooking}
+          totalPrice={bookingTotalPrice}
+          onGoToComprobante={handleGoToComprobante}
+        />
+
+        {/* Footer aislado sin enlaces de retorno ni accesos de admin */}
+        <footer className="border-t border-neutral-800/80 bg-black/75 backdrop-blur-md py-8 px-4 text-center text-xs text-neutral-400">
+          <div className="max-w-4xl mx-auto space-y-2">
+            <p className="text-neutral-300 font-medium">
+              Cobertura Audiovisual y Fotográfica de Shows en Vivo
+            </p>
+            <p className="text-neutral-400">
+              Rifa de 100 números únicos (00 al 99). Sorteo programado al completar la totalidad de los tickets.
+            </p>
+          </div>
+        </footer>
+      </div>
     </div>
   );
 };
