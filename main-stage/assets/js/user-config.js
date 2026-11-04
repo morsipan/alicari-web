@@ -30,3 +30,13 @@ window.ALICARI_USER_CONFIG = {
     defaultSlide: 0
   }
 };
+
+// Carga y sincronización automática desde almacenamiento local (cero intervención manual)
+try {
+  const autoSaved = localStorage.getItem('alicari_user_config_auto');
+  if (autoSaved) {
+    const parsed = JSON.parse(autoSaved);
+    if (parsed.calendarUrl !== undefined) window.ALICARI_USER_CONFIG.calendarUrl = parsed.calendarUrl;
+    if (Array.isArray(parsed.cryptoOwn) && parsed.cryptoOwn.length > 0) window.ALICARI_USER_CONFIG.cryptoOwn = parsed.cryptoOwn;
+  }
+} catch (_) {}

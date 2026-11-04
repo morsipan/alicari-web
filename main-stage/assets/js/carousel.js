@@ -20,7 +20,7 @@ class CarouselEngine {
     this.autoToggleBtn = document.getElementById(options.autoToggleId || 'btn-carousel-auto');
     this.statusLabel = document.getElementById(options.statusLabelId || 'carousel-status-label');
 
-    this.totalSlides = this.slides.length || 2;
+    this.totalSlides = this.slides.length || 3;
     
     // Restore persistent index or default to 0
     const savedIndex = parseInt(localStorage.getItem('alicari_vertical_slide_idx'), 10);
@@ -52,8 +52,9 @@ class CarouselEngine {
     this.wheelThrottleTime = 400;
 
     this.slideTitles = [
-      'PANTALLA 1/2 • TIEMPO Y AGENDA',
-      'PANTALLA 2/2 • MERCADOS Y ACTIVOS'
+      'PANTALLA 1/3 • TIEMPO Y AGENDA',
+      'PANTALLA 2/3 • MERCADOS Y ACTIVOS',
+      'PANTALLA 3/3 • PROYECTOS Y PLATAFORMAS'
     ];
 
     this.init();
@@ -171,6 +172,9 @@ class CarouselEngine {
       } else if (e.key === '2') {
         this.goToSlide(1);
         this.resetAutoTimer();
+      } else if (e.key === '3') {
+        this.goToSlide(2);
+        this.resetAutoTimer();
       } else if (e.key === ' ') {
         e.preventDefault();
         this.toggleAutoSlide();
@@ -240,10 +244,10 @@ class CarouselEngine {
 
       if (this.isDragging) {
         this.mouseDeltaX = diffX;
-        const currentBase = this.currentIndex * 50;
+        const currentBase = this.currentIndex * (100 / this.totalSlides);
         // Dampen drag at the edges
         const viewportWidth = this.viewport.clientWidth || 1080;
-        const dragPercent = (diffX / viewportWidth) * 50;
+        const dragPercent = (diffX / viewportWidth) * (100 / this.totalSlides);
         this.track.style.transform = `translate3d(calc(-${currentBase}% + ${dragPercent}%), 0, 0)`;
       }
     });
@@ -424,7 +428,7 @@ class CarouselEngine {
 
   updateUI() {
     // 1. Move track
-    const offsetPercentage = this.currentIndex * 50;
+    const offsetPercentage = this.currentIndex * (100 / this.totalSlides);
     this.track.style.transform = `translate3d(-${offsetPercentage}%, 0, 0)`;
 
     // 2. Update slides active class

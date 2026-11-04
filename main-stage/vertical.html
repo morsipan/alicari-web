@@ -49,6 +49,10 @@
             <span class="tab-num">02</span>
             <span>MERCADOS</span>
           </button>
+          <button class="carousel-tab-btn" role="tab" aria-selected="false" data-slide="2" title="Ver Pantalla de Proyectos y Estado (Tecla 3)">
+            <span class="tab-num">03</span>
+            <span>PROYECTOS</span>
+          </button>
         </div>
       </nav>
 
@@ -64,10 +68,10 @@
           <span>⚙️</span>
           <span>CONFIG</span>
         </button>
-        <div class="status-pill timer-pill" title="Actualización automática de cotizaciones">
+        <div class="status-pill timer-pill" title="Actualización automática de cotizaciones y proyectos cada 15 segundos">
           <span class="status-dot green"></span>
           <span>SYNC</span>
-          <span class="timer-countdown font-mono" id="finance-timer">20s</span>
+          <span class="timer-countdown font-mono" id="finance-timer">15s</span>
         </div>
       </div>
     </header>
@@ -328,6 +332,38 @@
           </div>
         </section>
 
+        <!-- ───────────────────────────────────────────────────
+             PANTALLA 3 / CARD 3: ESTADO DE PROYECTOS & PLATAFORMAS
+             ─────────────────────────────────────────────────── -->
+        <section class="carousel-slide" id="slide-projects" aria-label="Pantalla 3: Estado de Proyectos y Plataformas">
+          <div class="slide-projects">
+            <!-- Barra Superior de Telemetría de Proyectos -->
+            <div class="glass-panel projects-telemetry-bar">
+              <div class="proj-bar-left">
+                <span class="dot-cat"></span>
+                <span class="proj-bar-title font-mono">ESTADO DE PROYECTOS &amp; PLATAFORMAS</span>
+                <span class="box-sub-badge font-mono">LIVE MONITOR</span>
+              </div>
+              <div class="proj-bar-right font-mono">
+                <div class="status-pill font-mono" style="font-size: 0.62rem;">
+                  <span class="status-dot green"></span>
+                  <span>REFRESH 15s</span>
+                  <span id="projects-updated-time" style="color: var(--text-dim); margin-left: 4px;">LIVE</span>
+                </div>
+                <div class="status-pill font-mono" style="font-size: 0.62rem;">
+                  <span style="color: var(--text-muted);">LATENCIA:</span>
+                  <span class="text-green font-mono" id="projects-global-ping">38ms</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Grilla / Lista de Proyectos: DaleTePido, DaleTeAnoto, Matrify -->
+            <div class="projects-container-scroll" id="projects-container">
+              <!-- Renderizado dinámicamente por projects.js -->
+            </div>
+          </div>
+        </section>
+
       </div>
 
       <!-- Dock Flotante Inferior de Navegación Rápida -->
@@ -343,6 +379,10 @@
           <span class="quick-dock-num">02</span>
           <span>MERCADOS</span>
         </button>
+        <button class="quick-dock-btn" data-slide="2" title="Ver Pantalla 3: Proyectos y Plataformas (Tecla 3)">
+          <span class="quick-dock-num">03</span>
+          <span>PROYECTOS</span>
+        </button>
       </nav>
     </div>
 
@@ -353,9 +393,10 @@
       <div class="footer-dots-container">
         <button class="carousel-dot active" data-slide="0" aria-label="Ir a Pantalla 1: Tiempo y Clima"></button>
         <button class="carousel-dot" data-slide="1" aria-label="Ir a Pantalla 2: Mercados y Activos"></button>
+        <button class="carousel-dot" data-slide="2" aria-label="Ir a Pantalla 3: Proyectos y Plataformas"></button>
       </div>
 
-      <div id="carousel-status-label">PANTALLA 1/2 • TIEMPO, CLIMA Y AGENDA</div>
+      <div id="carousel-status-label">PANTALLA 1/3 • TIEMPO, CLIMA Y AGENDA</div>
       <div>MONTE GRANDE, BS AS • LIVE</div>
     </footer>
 
@@ -430,6 +471,9 @@
             <p class="settings-guide-text">
               Pega la <strong>Dirección secreta en formato iCal (.ics)</strong> de tu calendario para ver tus eventos en vivo en la Pantalla 1.
             </p>
+            <p class="settings-guide-text" style="color: var(--green-positive); margin-top: 4px;">
+              ⚡ <strong>Sincronización automática:</strong> Todo cambio se guarda y sincroniza en tiempo real de forma inmediata.
+            </p>
 
             <div class="settings-input-group" style="margin-top: 10px;">
               <label for="setting-cal-url-input">URL Secreta iCal (.ics):</label>
@@ -437,7 +481,7 @@
             </div>
 
             <div class="settings-btn-row" style="margin-top: 10px;">
-              <button class="settings-action-btn btn-primary" id="btn-save-cal-setting">Guardar y Sincronizar</button>
+              <button class="settings-action-btn btn-primary" id="btn-save-cal-setting">Sincronizar Ahora (Auto-Sync activo)</button>
               <button class="settings-action-btn btn-secondary" id="btn-clear-cal-setting">Desvincular (Modo Demo)</button>
             </div>
 

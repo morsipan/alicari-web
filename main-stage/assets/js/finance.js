@@ -49,9 +49,9 @@ const DEFAULT_CRYPTO_OWN = [
 
 class FinanceEngine {
   constructor() {
-    this.refreshInterval = 20 * 1000; // 20 segundos
+    this.refreshInterval = 15 * 1000; // 15 segundos
     this.timerEl = document.getElementById('finance-timer');
-    this.countdown = 20;
+    this.countdown = 15;
     this.timerInterval = null;
     this.storageKeyCrypto = 'alicari_crypto_own';
 
@@ -274,7 +274,7 @@ class FinanceEngine {
   }
 
   startCountdown() {
-    this.countdown = 20;
+    this.countdown = 15;
     this.updateTimerDisplay();
 
     if (this.timerInterval) clearInterval(this.timerInterval);
@@ -284,7 +284,7 @@ class FinanceEngine {
       this.updateTimerDisplay();
 
       if (this.countdown <= 0) {
-        this.countdown = 20;
+        this.countdown = 15;
         this.fetchAll();
       }
     }, 1000);

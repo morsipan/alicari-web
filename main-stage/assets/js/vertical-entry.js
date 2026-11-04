@@ -3,6 +3,7 @@ import './clock.js';
 import './weather.js';
 import './finance.js';
 import './agenda.js';
+import './projects.js';
 import './carousel.js';
 import './settings.js';
 
@@ -75,7 +76,19 @@ function initVerticalStage() {
     console.error('[ALICARI] Error in FinanceEngine:', err);
   }
 
-  // 6. Settings Modal Engine (Gestión de Criptos Own y Google Calendar URL)
+  // 6. Projects & Platform Status Engine (Pantalla 3)
+  try {
+    if (typeof ProjectsEngine !== 'undefined') {
+      window.ProjectsEngineInstance = new ProjectsEngine({
+        containerId: 'projects-container',
+        refreshInterval: 15 * 1000
+      });
+    }
+  } catch (err) {
+    console.error('[ALICARI] Error in ProjectsEngine:', err);
+  }
+
+  // 7. Settings Modal Engine (Gestión de Criptos Own y Google Calendar URL)
   try {
     if (typeof SettingsEngine !== 'undefined') {
       const settingsInstance = new SettingsEngine({
@@ -88,7 +101,7 @@ function initVerticalStage() {
     console.error('[ALICARI] Error in SettingsEngine:', err);
   }
 
-  // 7. Motor de Carrusel y Navegación entre Pantallas
+  // 8. Motor de Carrusel y Navegación entre Pantallas
   try {
     if (typeof CarouselEngine !== 'undefined') {
       window.CarouselEngineInstance = new CarouselEngine({

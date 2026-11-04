@@ -177,6 +177,8 @@ class SettingsEngine {
           holdings: holdings
         });
 
+        this.syncUserConfigInMemory();
+
         // Limpiar inputs
         if (addSelect) addSelect.value = '';
         if (customIdInput) {
@@ -245,6 +247,7 @@ class SettingsEngine {
         const coinId = input.getAttribute('data-id');
         const val = e.target.value;
         this.financeEngine.updateHoldingAmount(coinId, val);
+        this.syncUserConfigInMemory();
         
         // Actualizar el texto del total en vivo
         const parent = input.closest('.setting-coin-item');
@@ -261,13 +264,23 @@ class SettingsEngine {
       btn.addEventListener('click', () => {
         const coinId = btn.getAttribute('data-id');
         this.financeEngine.removeCryptoOwnCoin(coinId);
+        this.syncUserConfigInMemory();
         this.renderCryptoSettingsList();
       });
     });
   }
 
+  syncUserConfigInMemory() {
+    const config = this.generateConfigObject();
+    window.ALICARI_USER_CONFIG = config;
+    try {
+      localStorage.setItem('alicari_user_config_auto', JSON.stringify(config));
+    } catch (_) {}
+    this.renderSyncSettings();
+  }
+
   /* ─────────────────────────────────────────────────────────────
-     GESTIÓN DE GOOGLE CALENDAR
+     GESTIÓN DE GOOGLE CALENDAR (SINCRONIZACIÓN AUTOMÁTICA EN VIVO)
      ───────────────────────────────────────────────────────────── */
   bindCalendarForm() {
     const urlInput = document.getElementById('setting-cal-url-input');
@@ -275,29 +288,47 @@ class SettingsEngine {
     const clearBtn = document.getElementById('btn-clear-cal-setting');
     const testStatus = document.getElementById('setting-cal-status');
 
+    let calSyncDebounce = null;
+    const triggerCalAutoSync = () => {
+      if (!this.agendaEngine) return;
+      const val = (urlInput ? urlInput.value : '').trim();
+
+      if (testStatus) {
+        testStatus.textContent = '⟳ Sincronizando automáticamente con Google Calendar...';
+        testStatus.className = 'cal-status-testing font-mono';
+      }
+
+      this.agendaEngine.setCalendarUrl(val);
+      this.syncUserConfigInMemory();
+
+      setTimeout(() => {
+        if (testStatus) {
+          if (val) {
+            testStatus.textContent = '✓ Sincronizado automáticamente en vivo. No es necesario guardar.';
+            testStatus.className = 'cal-status-ok font-mono';
+          } else {
+            testStatus.textContent = '● Modo demostración activo (sin enlace vinculado).';
+            testStatus.className = 'cal-status-neutral font-mono';
+          }
+        }
+      }, 800);
+    };
+
+    if (urlInput) {
+      urlInput.addEventListener('input', () => {
+        clearTimeout(calSyncDebounce);
+        calSyncDebounce = setTimeout(triggerCalAutoSync, 450);
+      });
+      urlInput.addEventListener('paste', () => {
+        clearTimeout(calSyncDebounce);
+        calSyncDebounce = setTimeout(triggerCalAutoSync, 100);
+      });
+      urlInput.addEventListener('change', triggerCalAutoSync);
+    }
+
     if (saveBtn) {
       saveBtn.addEventListener('click', async () => {
-        if (!this.agendaEngine) return;
-        const val = urlInput ? urlInput.value.trim() : '';
-
-        if (!val) {
-          alert('Por favor pega la dirección secreta iCal (.ics) de tu Google Calendar.');
-          return;
-        }
-
-        if (testStatus) {
-          testStatus.textContent = 'Guardando y sincronizando con Google Calendar...';
-          testStatus.className = 'cal-status-testing font-mono';
-        }
-
-        this.agendaEngine.setCalendarUrl(val);
-
-        setTimeout(() => {
-          if (testStatus) {
-            testStatus.textContent = '✓ Calendario vinculado exitosamente y sincronizado.';
-            testStatus.className = 'cal-status-ok font-mono';
-          }
-        }, 1200);
+        triggerCalAutoSync();
       });
     }
 
@@ -307,6 +338,7 @@ class SettingsEngine {
           if (this.agendaEngine) {
             this.agendaEngine.setCalendarUrl('');
             if (urlInput) urlInput.value = '';
+            this.syncUserConfigInMemory();
             if (testStatus) {
               testStatus.textContent = 'Calendario desvinculado (Modo Demo activo).';
               testStatus.className = 'cal-status-neutral font-mono';

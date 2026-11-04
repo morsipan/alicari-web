@@ -1,7 +1,8 @@
 /**
  * ALICARI WALLPAPER - GOOGLE CALENDAR & AGENDA ENGINE
- * Parses iCal (.ics) private feeds and renders upcoming events with live countdowns.
- * 100% Client-side and private: URL and data stored exclusively in localStorage.
+ * Parses iCal (.ics) private feeds and renders upcoming events across the next 5 days.
+ * If a day has no events, it displays cleanly as "Libre".
+ * 100% Client-side, private, and automatic live synchronization (15-second refresh).
  */
 
 class AgendaEngine {
@@ -9,9 +10,9 @@ class AgendaEngine {
     this.containerId = options.containerId || 'calendar-widget';
     this.container = document.getElementById(this.containerId);
     this.storageKey = 'alicari_calendar_url';
-    this.refreshInterval = options.refreshInterval || 5 * 60 * 1000; // 5 mins
+    this.refreshInterval = options.refreshInterval || 15 * 1000; // 15 segundos
 
-    // Priorizar URL en user-config.js si existe
+    // Priorizar URL en user-config.js si existe, luego localStorage
     const configUrl = (window.ALICARI_USER_CONFIG && window.ALICARI_USER_CONFIG.calendarUrl) ? window.ALICARI_USER_CONFIG.calendarUrl : '';
     this.calendarUrl = configUrl || localStorage.getItem(this.storageKey) || '';
     this.events = [];
@@ -28,14 +29,23 @@ class AgendaEngine {
       this.render();
     }
 
-    // Intervalo de actualización de calendario
+    // Intervalo de actualización automática cada 15 segundos
     setInterval(() => {
       if (this.calendarUrl) this.fetchCalendar();
       else this.render();
     }, this.refreshInterval);
 
-    // Intervalo corto para actualizar los contadores "en X min"
-    setInterval(() => this.updateCountdowns(), 30 * 1000);
+    // Escuchar cambios de localStorage entre pestañas para auto-sync instantáneo
+    window.addEventListener('storage', (e) => {
+      if (e.key === this.storageKey) {
+        this.calendarUrl = e.newValue || '';
+        if (this.calendarUrl) this.fetchCalendar();
+        else {
+          this.loadDefaultEvents();
+          this.render();
+        }
+      }
+    });
   }
 
   setCalendarUrl(url) {
@@ -58,21 +68,20 @@ class AgendaEngine {
 
   loadDefaultEvents() {
     const now = new Date();
-    const todayStr = now.toISOString().split('T')[0];
     
-    // Horas dinámicas para que siempre muestre eventos relevantes hoy
-    const makeTime = (hours, minutes) => {
-      const d = new Date(now);
-      d.setHours(hours, minutes, 0, 0);
+    // Horas dinámicas distribuidas en los próximos 5 días
+    const makeDayTime = (dayOffset, hours, minutes) => {
+      const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() + dayOffset, hours, minutes, 0, 0);
       return d;
     };
 
     this.events = [
+      // Día 0 (Hoy)
       {
         id: 'demo-1',
         title: 'Daily Standup / Sincronización',
-        start: makeTime(10, 0),
-        end: makeTime(10, 30),
+        start: makeDayTime(0, 10, 0),
+        end: makeDayTime(0, 10, 30),
         location: 'Google Meet',
         isAllDay: false,
         isDemo: true
@@ -80,21 +89,35 @@ class AgendaEngine {
       {
         id: 'demo-2',
         title: 'Revisión de Métricas & Mercados',
-        start: makeTime(14, 0),
-        end: makeTime(15, 0),
+        start: makeDayTime(0, 15, 30),
+        end: makeDayTime(0, 16, 30),
         location: 'Oficina / Sala A',
         isAllDay: false,
         isDemo: true
       },
+      // Día 1 (Mañana)
       {
         id: 'demo-3',
-        title: 'Planificación de Lanzamiento Alicari 2026',
-        start: makeTime(17, 30),
-        end: makeTime(18, 30),
+        title: 'Sprint Review DaleTePido & Commerce',
+        start: makeDayTime(1, 11, 0),
+        end: makeDayTime(1, 12, 0),
+        location: 'Google Meet',
+        isAllDay: false,
+        isDemo: true
+      },
+      // Día 2: Libre (sin eventos intencionalmente para mostrar estado "Libre")
+      
+      // Día 3:
+      {
+        id: 'demo-4',
+        title: 'Planificación de Lanzamiento DaleTeAnoto / Matrify',
+        start: makeDayTime(3, 16, 0),
+        end: makeDayTime(3, 17, 30),
         location: 'Virtual',
         isAllDay: false,
         isDemo: true
       }
+      // Día 4: Libre (sin eventos intencionalmente para mostrar estado "Libre")
     ];
   }
 
@@ -173,7 +196,6 @@ class AgendaEngine {
 
     const parseICSDate = (dateStr) => {
       if (!dateStr) return null;
-      // Tratar formato YYYYMMDDTHHMMSSZ o TZID
       const clean = dateStr.replace(/^.*:/, '');
       if (clean.length === 8) { // YYYYMMDD (All day)
         const y = parseInt(clean.substring(0, 4), 10);
@@ -203,6 +225,10 @@ class AgendaEngine {
         currentEvent = { isAllDay: false };
       } else if (line.startsWith('END:VEVENT')) {
         if (currentEvent && currentEvent.start && currentEvent.title) {
+          if (!currentEvent.end) {
+            // Default 1 hour if DTEND missing
+            currentEvent.end = new Date(currentEvent.start.getTime() + 60 * 60 * 1000);
+          }
           events.push(currentEvent);
         }
         currentEvent = null;
@@ -222,13 +248,13 @@ class AgendaEngine {
       }
     }
 
-    // Filtrar sólo eventos desde hoy en adelante (próximos 7 días) y ordenar cronológicamente
+    // Filtrar sólo eventos desde hoy en adelante (próximos 5 días) y ordenar cronológicamente
     const now = new Date();
-    const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const limitDate = new Date(startOfToday.getTime() + 7 * 24 * 60 * 60 * 1000);
+    const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
+    const limitDate = new Date(startOfToday.getTime() + 6 * 24 * 60 * 60 * 1000);
 
     return events
-      .filter(ev => ev.start && ev.end && ev.end >= startOfToday && ev.start <= limitDate)
+      .filter(ev => ev.start && ev.end && ev.end >= startOfToday && ev.start < limitDate)
       .sort((a, b) => a.start.getTime() - b.start.getTime());
   }
 
@@ -244,9 +270,19 @@ class AgendaEngine {
     return date.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit', hour12: false });
   }
 
-  formatDateShort(date) {
+  formatDayHeader(date, dayOffset) {
     if (!date) return '';
-    return date.toLocaleDateString('es-AR', { weekday: 'short', day: 'numeric', month: 'short' }).toUpperCase();
+    const dayName = date.toLocaleDateString('es-AR', { weekday: 'short' }).toUpperCase().replace('.', '');
+    const dayNumber = date.getDate();
+    const monthName = date.toLocaleDateString('es-AR', { month: 'short' }).toUpperCase().replace('.', '');
+
+    if (dayOffset === 0) {
+      return `HOY • ${dayName} ${dayNumber} ${monthName}`;
+    }
+    if (dayOffset === 1) {
+      return `MAÑANA • ${dayName} ${dayNumber} ${monthName}`;
+    }
+    return `${dayName} ${dayNumber} ${monthName}`;
   }
 
   getEventStatus(event) {
@@ -273,11 +309,7 @@ class AgendaEngine {
       return { label: 'MAÑANA', className: 'status-tomorrow' };
     }
 
-    return { label: this.formatDateShort(start), className: 'status-upcoming' };
-  }
-
-  updateCountdowns() {
-    this.render();
+    return { label: 'AGENDADO', className: 'status-upcoming' };
   }
 
   render() {
@@ -285,7 +317,6 @@ class AgendaEngine {
 
     const listContainer = document.getElementById('calendar-events-list');
     const isConfigured = !!this.calendarUrl;
-    const isDemo = !isConfigured;
 
     const demoBadge = document.getElementById('calendar-mode-badge');
     if (demoBadge) {
@@ -295,51 +326,97 @@ class AgendaEngine {
 
     if (!listContainer) return;
 
-    if (!this.events || this.events.length === 0) {
-      listContainer.innerHTML = `
-        <div class="calendar-empty-state">
-          <span class="empty-icon">📅</span>
-          <span class="empty-title">Sin eventos próximos</span>
-          <span class="empty-desc">${isConfigured ? 'Tu agenda está libre para los próximos días.' : 'Configura tu enlace iCal de Google Calendar para ver tu agenda real.'}</span>
-          <button class="cal-quick-btn" id="btn-open-cal-settings">Configurar Calendario ⚙️</button>
-        </div>
-      `;
-      const btn = listContainer.querySelector('#btn-open-cal-settings');
-      if (btn && window.SettingsEngineInstance) {
-        btn.onclick = () => window.SettingsEngineInstance.openTab('calendar');
-      }
-      return;
+    const now = new Date();
+    const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
+
+    // Construir los próximos 5 días (Día 0 = Hoy, Día 1 = Mañana, ..., Día 4)
+    const next5Days = [];
+    for (let i = 0; i < 5; i++) {
+      const dayStart = new Date(startOfToday.getTime() + i * 24 * 60 * 60 * 1000);
+      const dayEnd = new Date(dayStart.getTime() + 24 * 60 * 60 * 1000);
+
+      const dayEvents = (this.events || []).filter(ev => {
+        const s = new Date(ev.start);
+        const e = new Date(ev.end);
+        return s < dayEnd && e > dayStart;
+      }).sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime());
+
+      next5Days.push({
+        offset: i,
+        date: dayStart,
+        events: dayEvents
+      });
     }
 
-    // Tomar los próximos 4 eventos para que no desborde verticalmente
-    const displayEvents = this.events.slice(0, 4);
-
     let html = '';
-    displayEvents.forEach(ev => {
-      const status = this.getEventStatus(ev);
-      const startTime = ev.isAllDay ? 'Todo el día' : this.formatTime(new Date(ev.start));
-      const endTime = ev.isAllDay ? '' : ` - ${this.formatTime(new Date(ev.end))}`;
-      const locationBadge = ev.location ? `<span class="event-loc" title="${ev.location}">📍 ${ev.location}</span>` : '';
 
-      html += `
-        <div class="calendar-event-row ${status.isCurrent ? 'event-is-current' : ''}">
-          <div class="event-time-col font-mono">
-            <span class="event-time-start">${startTime}</span>
-            <span class="event-time-end">${endTime}</span>
-          </div>
+    next5Days.forEach(day => {
+      const dayTitle = this.formatDayHeader(day.date, day.offset);
+      const hasEvents = day.events && day.events.length > 0;
 
-          <div class="event-details-col">
-            <div class="event-title-row">
-              <span class="event-title" title="${ev.title}">${ev.title}</span>
+      if (!hasEvents) {
+        // Día libre sin eventos
+        html += `
+          <div class="calendar-day-block day-is-free">
+            <div class="calendar-day-header font-mono">
+              <div class="day-header-left">
+                <span class="day-dot-indicator free"></span>
+                <span class="day-title-text">${dayTitle}</span>
+              </div>
+              <span class="day-status-pill free font-mono">LIBRE</span>
             </div>
-            ${locationBadge ? `<div class="event-meta-row">${locationBadge}</div>` : ''}
+            <div class="calendar-day-free-box">
+              <span class="free-icon-check">✓</span>
+              <span class="free-main-text">Libre</span>
+              <span class="free-sub-text font-mono">— Sin compromisos</span>
+            </div>
           </div>
+        `;
+      } else {
+        // Día con eventos
+        let eventsHtml = '';
+        day.events.forEach(ev => {
+          const status = this.getEventStatus(ev);
+          const startTime = ev.isAllDay ? 'Todo el día' : this.formatTime(new Date(ev.start));
+          const endTime = ev.isAllDay ? '' : ` - ${this.formatTime(new Date(ev.end))}`;
+          const locationBadge = ev.location ? `<span class="event-loc" title="${ev.location}">📍 ${ev.location}</span>` : '';
 
-          <div class="event-status-col">
-            <span class="event-status-pill font-mono ${status.className}">${status.label}</span>
+          eventsHtml += `
+            <div class="calendar-event-row ${status.isCurrent ? 'event-is-current' : ''}">
+              <div class="event-time-col font-mono">
+                <span class="event-time-start">${startTime}</span>
+                <span class="event-time-end">${endTime}</span>
+              </div>
+
+              <div class="event-details-col">
+                <div class="event-title-row">
+                  <span class="event-title" title="${ev.title}">${ev.title}</span>
+                </div>
+                ${locationBadge ? `<div class="event-meta-row">${locationBadge}</div>` : ''}
+              </div>
+
+              <div class="event-status-col">
+                <span class="event-status-pill font-mono ${status.className}">${status.label}</span>
+              </div>
+            </div>
+          `;
+        });
+
+        html += `
+          <div class="calendar-day-block day-has-events">
+            <div class="calendar-day-header font-mono">
+              <div class="day-header-left">
+                <span class="day-dot-indicator busy"></span>
+                <span class="day-title-text">${dayTitle}</span>
+              </div>
+              <span class="day-status-pill busy font-mono">${day.events.length} ${day.events.length === 1 ? 'EVENTO' : 'EVENTOS'}</span>
+            </div>
+            <div class="calendar-day-events-list">
+              ${eventsHtml}
+            </div>
           </div>
-        </div>
-      `;
+        `;
+      }
     });
 
     listContainer.innerHTML = html;
@@ -347,3 +424,4 @@ class AgendaEngine {
 }
 
 window.AgendaEngine = AgendaEngine;
+export default AgendaEngine;
