@@ -223,7 +223,7 @@ export const RifaGrid: React.FC<RifaGridProps> = ({
         </div>
 
         <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-white leading-tight">
-          Cobertura Fotográfica &amp; Video <br />
+          Cobertura fotográfica <br />
           <span className="italic font-light text-neutral-300">para tu show en vivo</span>
         </h1>
 

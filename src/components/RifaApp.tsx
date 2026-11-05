@@ -159,7 +159,7 @@ export const RifaApp: React.FC = () => {
         <footer className="border-t border-neutral-800/80 bg-black/75 backdrop-blur-md py-8 px-4 text-center text-xs text-neutral-400">
           <div className="max-w-4xl mx-auto space-y-2">
             <p className="text-neutral-300 font-medium">
-              Cobertura Audiovisual y Fotográfica de Shows en Vivo
+              Cobertura fotográfica para tu show en vivo
             </p>
             <p className="text-neutral-400">
               Rifa de 100 números únicos (00 al 99). Sorteo programado al completar la totalidad de los tickets.
