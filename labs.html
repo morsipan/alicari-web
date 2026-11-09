@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ALICARI LABS — Laboratorio de Interfaces & Software</title>
+  <meta name="description" content="División experimental de ALICARI. Investigación en tipografía computacional en canvas y desarrollo de productos in-house: Dale Te Pido, Dale Te Anoto y Matrify." />
+  <link rel="icon" type="image/png" href="fav.png" />
+  <link rel="apple-touch-icon" href="fav.png" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="ALICARI LABS — Laboratorio de Interfaces & Software" />
+  <meta property="og:description" content="División experimental de ALICARI: tipografía interactiva basada en canvas y productos in-house desarrollados al 90%." />
+  <meta property="og:image" content="https://alicari.com.ar/portada-behance.jpg" />
+  <meta property="og:type" content="website" />
+
+  <!-- Fonts: Outfit (Brand) + Anton (Local Stipple Engine) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="tooplate-exhibit-style.css" />
+
+  <style>
+    /* Scoped Dark Navbar & Footer for Labs Runway */
+    .site-nav--labs {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 200;
+      background-color: rgba(1, 1, 1, 0.88);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    }
+    .site-nav--labs .nav__wordmark {
+      opacity: 1 !important;
+      pointer-events: all !important;
+    }
+    .site-nav--labs .nav__links a {
+      color: #8a8a8a !important;
+      font-weight: 500;
+      transition: color 0.2s ease;
+    }
+    .site-nav--labs .nav__links a:hover,
+    .site-nav--labs .nav__links .nav__link--active {
+      color: #ffffff !important;
+    }
+    .site-nav--labs .nav__links .nav__link--active {
+      position: relative;
+    }
+    .site-nav--labs .nav__links .nav__link--active::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background-color: #cc0000;
+    }
+    .site-nav--labs .nav__contact-btn {
+      border: 1px solid rgba(255, 255, 255, 0.25) !important;
+      color: #ffffff !important;
+      border-radius: 6px;
+      padding: 0.5rem 1.1rem;
+      transition: all 0.2s ease;
+    }
+    .site-nav--labs .nav__contact-btn:hover {
+      background-color: #cc0000 !important;
+      border-color: #cc0000 !important;
+      color: #ffffff !important;
+      box-shadow: 0 0 15px rgba(204, 0, 0, 0.4);
+    }
+    .site-nav--labs .nav__hamburger-line {
+      background: #ffffff !important;
+    }
+    .site-nav--labs .nav__mobile-menu {
+      background-color: #010101 !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .site-nav--labs .nav__mobile-menu a {
+      color: #8a8a8a !important;
+    }
+    .site-nav--labs .nav__mobile-menu a:hover,
+    .site-nav--labs .nav__mobile-menu .nav__link--active {
+      color: #ffffff !important;
+    }
+
+    /* Labs Footer */
+    .site-footer--labs {
+      background-color: #010101;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      color: #8a8a8a;
+      padding: 3rem var(--space-page-x, 2rem);
+    }
+    .site-footer--labs .footer__nav a {
+      color: #8a8a8a !important;
+      transition: color 0.2s ease;
+    }
+    .site-footer--labs .footer__nav a:hover,
+    .site-footer--labs .footer__nav .nav__link--active {
+      color: #ffffff !important;
+    }
+  </style>
+</head>
+
+<body class="bg-[#010101] text-[#f6f6f6] antialiased min-h-screen">
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       NAVIGATION (SCOPED LABS RUNWAY HEADER)
+       ═══════════════════════════════════════════════════════════════ -->
+  <nav class="site-nav site-nav--labs" role="navigation" aria-label="Main">
+    <div class="nav__bar">
+      <a href="index.html" class="nav__wordmark">
+        <img src="images/logo-alicari-05.svg" alt="ALICARI" class="nav__logo-img">
+      </a>
+
+      <!-- Desktop links -->
+      <ul class="nav__links">
+        <li><a href="index.html">Portfolio</a></li>
+        <li><a href="about.html">Conóceme</a></li>
+        <li><a href="labs.html" class="nav__link--active">Labs</a></li>
+        <li><a href="#contacto" class="nav__contact-btn js-contact-trigger">Contacto</a></li>
+      </ul>
+
+      <!-- Hamburger for mobile -->
+      <button class="nav__hamburger" id="js-hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="js-mobile-menu">
+        <span class="nav__hamburger-line"></span>
+        <span class="nav__hamburger-line"></span>
+        <span class="nav__hamburger-line"></span>
+      </button>
+    </div>
+
+    <!-- Mobile menu -->
+    <ul class="nav__mobile-menu" id="js-mobile-menu" aria-hidden="true">
+      <li><a href="index.html">Portfolio</a></li>
+      <li><a href="about.html">Conóceme</a></li>
+      <li><a href="labs.html" class="nav__link--active">Labs</a></li>
+      <li><a href="#contacto" class="js-contact-trigger">Contacto</a></li>
+    </ul>
+  </nav>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       REACT LABS ROOT
+       ═══════════════════════════════════════════════════════════════ -->
+  <div id="labs-root"></div>
+  <script type="module" src="/src/labs.tsx"></script>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       FOOTER
+       ═══════════════════════════════════════════════════════════════ -->
+  <footer class="site-footer site-footer--labs">
+    <div class="footer__inner">
+      <div>
+        <a href="index.html" class="footer__logo">
+          <img src="images/logo-alicari-04-04.svg" alt="ALICARI" class="footer__logo-img">
+        </a>
+        <p class="footer__credit" style="color: #666; margin-top: 0.5rem; font-size: 0.75rem;">
+          ALICARI LABS // Creative Engineering & Software Lab
+        </p>
+      </div>
+
+      <ul class="footer__nav">
+        <li><a href="index.html">Portfolio</a></li>
+        <li><a href="about.html">Conóceme</a></li>
+        <li><a href="labs.html" class="nav__link--active">Labs</a></li>
+        <li><a href="#contacto" class="js-contact-trigger">Contacto</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       CONTACT MODAL
+       ═══════════════════════════════════════════════════════════════ -->
+  <div class="modal" id="js-contact-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal__backdrop" id="js-modal-backdrop"></div>
+    <div class="modal__container">
+      <div class="modal__header">
+        <span class="modal__title" id="modal-title">Contacto // Alicari Labs</span>
+        <button class="modal__close" id="js-modal-close" aria-label="Cerrar modal">
+          <svg viewBox="0 0 24 24">
+            <path d="M18 6L6 18M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </button>
+      </div>
+      <div class="modal__body">
+        <div class="modal__grid">
+          
+          <!-- Form -->
+          <div class="contact-form-wrap">
+            <h2 class="contact-form__heading">Consulta sobre Labs / Pilotos</h2>
+            <p class="contact-form__subheading">
+              ¿Querés probar Dale Te Pido, Dale Te Anoto, Matrify o coordinar un desarrollo conjunto? Escribime a continuación.
+            </p>
+            <form id="js-contact-form" novalidate>
+              <div class="form-row">
+                <div class="form-field">
+                  <label class="form-label" for="field-name">
+                    Nombre <span class="required" aria-hidden="true">*</span>
+                  </label>
+                  <input type="text" id="field-name" name="name" class="form-input" placeholder="Tu nombre" autocomplete="name" required />
+                  <span class="field-error" id="err-name">Por favor ingresa tu nombre.</span>
+                </div>
+                <div class="form-field">
+                  <label class="form-label" for="field-email">
+                    Email <span class="required" aria-hidden="true">*</span>
+                  </label>
+                  <input type="email" id="field-email" name="email" class="form-input" placeholder="tu@email.com" autocomplete="email" required />
+                  <span class="field-error" id="err-email">Por favor ingresa un correo válido.</span>
+                </div>
+              </div>
+              <div class="form-field">
+                <label class="form-label" for="field-subject">Proyecto de Interés</label>
+                <div class="form-select-wrap">
+                  <select id="field-subject" name="subject" class="form-select">
+                    <option value="labs">Alicari Labs - General</option>
+                    <option value="tepido">Dale Te Pido (Catálogo WhatsApp)</option>
+                    <option value="teanoto">Dale Te Anoto (Turnera Ágil)</option>
+                    <option value="matrify">Matrify (Matriculación Escolar)</option>
+                    <option value="custom">Desarrollo Frontend / Canvas a medida</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-field">
+                <label class="form-label" for="field-message">
+                  Mensaje <span class="required" aria-hidden="true">*</span>
+                </label>
+                <textarea id="field-message" name="message" class="form-textarea" placeholder="Cuéntame sobre tu proyecto o necesidad..." required></textarea>
+                <span class="field-error" id="err-message">Por favor escribe tu mensaje.</span>
+              </div>
+              <div class="form-submit">
+                <button type="submit" class="btn-submit" id="js-submit-btn">
+                  Enviar mensaje
+                </button>
+                <p class="form-note">
+                  * Campos requeridos.
+                </p>
+              </div>
+              <div class="form-message is-success" id="js-success" role="alert" style="display: none;">
+                ✓ &nbsp;Tu mensaje ha sido enviado con éxito. Me pondré en contacto muy pronto.
+              </div>
+              <div class="form-message is-error" id="js-error" role="alert" style="display: none;">
+                Algo salió mal. Por favor escríbeme directamente al correo de contacto.
+              </div>
+            </form>
+          </div>
+
+          <!-- Sidebar -->
+          <aside class="contact-info" aria-label="Contact information">
+            <div class="contact-info__section">
+              <p class="contact-info__label">Disponibilidad Labs</p>
+              <div class="availability">
+                <span class="availability__dot"></span>
+                Abierto para pilotos y consultoría
+              </div>
+            </div>
+            <div class="contact-info__section">
+              <p class="contact-info__label">Email</p>
+              <a href="mailto:licari.multimedios@gmail.com" class="contact-info__link">
+                licari.multimedios@gmail.com
+              </a>
+            </div>
+            <div class="contact-info__section">
+              <p class="contact-info__label">Ubicación</p>
+              <p class="contact-info__value">Buenos Aires, Argentina</p>
+            </div>
+            <div class="contact-info__section">
+              <p class="contact-info__label">Redes</p>
+              <div class="social-links" style="display: flex; flex-direction: row; gap: 12px; margin-top: 8px;">
+                <a href="https://behance.net/alicari" target="_blank" rel="noopener" class="social-link" style="display: inline-flex;" aria-label="Behance">
+                  <img src="images/behance.png" alt="Behance" style="width: 28px; height: 28px; display: block;" />
+                </a>
+                <a href="https://linkedin.com/in/alicari/" target="_blank" rel="noopener" class="social-link" style="display: inline-flex;" aria-label="LinkedIn">
+                  <img src="images/linkedin.png" alt="LinkedIn" style="width: 28px; height: 28px; display: block;" />
+                </a>
+              </div>
+            </div>
+          </aside>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript for navigation & contact modal -->
+  <script type="module" src="/tooplate-exhibit-script.js"></script>
+</body>
+
+</html>

@@ -19,6 +19,11 @@ export default defineConfig({
               urlPath === '/comprobante'
             ) {
               req.url = '/rifa.html' + (query ? `?${query}` : '');
+            } else if (
+              urlPath === '/labs' ||
+              urlPath.startsWith('/labs/')
+            ) {
+              req.url = '/labs.html' + (query ? `?${query}` : '');
             }
           }
           next();
@@ -43,6 +48,7 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: path.resolve(__dirname, 'index.html'),
+        labs: path.resolve(__dirname, 'labs.html'),
         rifa: path.resolve(__dirname, 'rifa.html'),
         rifaGestion: path.resolve(__dirname, 'rifa/safe/gestion/index.html'),
         comprobante: path.resolve(__dirname, 'comprobante/index.html'),

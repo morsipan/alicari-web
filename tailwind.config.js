@@ -5,6 +5,7 @@ module.exports = {
     "./about.html",
     "./contact.html",
     "./rifa.html",
+    "./labs.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   corePlugins: {
@@ -12,6 +13,10 @@ module.exports = {
   },
   theme: {
     extend: {
+      fontFamily: {
+        anton: ["Anton", "sans-serif"],
+        outfit: ["Outfit", "sans-serif"],
+      },
       colors: {
         brand: {
           red: "#cc0000",

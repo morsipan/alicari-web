@@ -3,6 +3,14 @@
   "trailingSlash": false,
   "rewrites": [
     {
+      "source": "/labs",
+      "destination": "/labs.html"
+    },
+    {
+      "source": "/labs/",
+      "destination": "/labs.html"
+    },
+    {
       "source": "/animate",
       "destination": "/animate/index.html"
     },
