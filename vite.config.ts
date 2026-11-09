@@ -49,6 +49,7 @@ export default defineConfig({
       input: {
         main: path.resolve(__dirname, 'index.html'),
         labs: path.resolve(__dirname, 'labs.html'),
+        labsIndex: path.resolve(__dirname, 'labs/index.html'),
         rifa: path.resolve(__dirname, 'rifa.html'),
         rifaGestion: path.resolve(__dirname, 'rifa/safe/gestion/index.html'),
         comprobante: path.resolve(__dirname, 'comprobante/index.html'),

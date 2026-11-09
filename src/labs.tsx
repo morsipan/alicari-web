@@ -11,3 +11,4 @@ if (labsRoot) {
     </React.StrictMode>
   );
 }
+

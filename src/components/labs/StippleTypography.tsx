@@ -700,3 +700,4 @@ export const StippleTypography: React.FC<StippleTypographyProps> = ({
     </div>
   );
 };
+

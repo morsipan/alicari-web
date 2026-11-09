@@ -453,3 +453,4 @@ export const LabsProjects: React.FC = () => {
     </section>
   );
 };
+

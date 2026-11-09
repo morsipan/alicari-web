@@ -225,3 +225,4 @@ export const LabsApp: React.FC = () => {
     </div>
   );
 };
+
