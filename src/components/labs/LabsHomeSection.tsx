@@ -1,5 +1,6 @@
 import React from 'react';
 import { ArrowRight, ArrowUpRight } from 'lucide-react';
+import { TechLogoRow, type TechKey } from './TechLogoRow';
 
 interface HomeLabSystem {
   id: string;
@@ -13,6 +14,7 @@ interface HomeLabSystem {
   logo: string;
   logoBg: 'dark' | 'light';
   logoHeight: string;
+  techLogos: TechKey[];
 }
 
 const HOME_LAB_SYSTEMS: HomeLabSystem[] = [
@@ -29,6 +31,7 @@ const HOME_LAB_SYSTEMS: HomeLabSystem[] = [
     logo: '/images/logos/daletepido-logo.png',
     logoBg: 'dark',
     logoHeight: '22px',
+    techLogos: ['nextjs', 'typescript', 'tailwindcss', 'supabase', 'whatsapp', 'vercel'],
   },
   {
     id: 'dale-te-anoto',
@@ -43,6 +46,7 @@ const HOME_LAB_SYSTEMS: HomeLabSystem[] = [
     logo: '/images/logos/daleteanoto-logo.png',
     logoBg: 'light',
     logoHeight: '28px',
+    techLogos: ['react', 'typescript', 'tailwindcss', 'googlecalendar', 'postgresql', 'vercel'],
   },
   {
     id: 'matrify',
@@ -57,6 +61,7 @@ const HOME_LAB_SYSTEMS: HomeLabSystem[] = [
     logo: '/images/logos/matrify-logo.svg',
     logoBg: 'light',
     logoHeight: '24px',
+    techLogos: ['nextjs', 'react', 'typescript', 'tailwindcss', 'cloudflare', 'vercel'],
   },
 ];
 
@@ -152,9 +157,11 @@ export const LabsHomeSection: React.FC = () => {
                   {system.name}
                 </h3>
 
-                <p className="text-sm text-[#4a4a4a] font-light leading-relaxed m-0 mb-6">
+                <p className="text-sm text-[#4a4a4a] font-light leading-relaxed m-0 mb-5">
                   {system.description}
                 </p>
+
+                <TechLogoRow items={system.techLogos} className="mb-5" />
               </div>
 
               {/* Footer: Highlight & Live Link */}

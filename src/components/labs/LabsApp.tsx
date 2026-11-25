@@ -10,6 +10,7 @@ import {
   X,
   Zap,
 } from 'lucide-react';
+import { TechLogoRow, type TechKey } from './TechLogoRow';
 
 export interface LabSystem {
   id: string;
@@ -30,6 +31,7 @@ export interface LabSystem {
   highlights: { label: string; value: string }[];
   capabilities: string[];
   architecture: string[];
+  techLogos: TechKey[];
   techStack: string[];
 }
 
@@ -73,6 +75,7 @@ export const LAB_SYSTEMS: LabSystem[] = [
       'Motor determinista de serialización de pedidos hacia protocolo WhatsApp Business',
       'Despliegue perimetral en Edge CDN con caché inteligente de activos multimedia',
     ],
+    techLogos: ['nextjs', 'typescript', 'tailwindcss', 'supabase', 'whatsapp', 'vercel'],
     techStack: ['Next.js', 'TypeScript', 'Tailwind CSS', 'Supabase', 'WhatsApp Protocol', 'IA'],
   },
   {
@@ -114,6 +117,7 @@ export const LAB_SYSTEMS: LabSystem[] = [
       'Tareas programadas serverless para notificaciones preventivas previas a cada cita',
       'Interfaz responsive accesible diseñada bajo criterios WCAG 2.1 AA',
     ],
+    techLogos: ['react', 'typescript', 'tailwindcss', 'googlecalendar', 'postgresql', 'vercel'],
     techStack: ['React', 'TypeScript', 'Tailwind CSS', 'Google Calendar API', 'PostgreSQL', 'Edge Functions'],
   },
   {
@@ -155,6 +159,7 @@ export const LAB_SYSTEMS: LabSystem[] = [
       'Control de acceso basado en roles para dirección, secretaría, preceptores y familias',
       'Registro de auditoría inmutable para seguimiento del estado de cada matrícula',
     ],
+    techLogos: ['nextjs', 'react', 'typescript', 'tailwindcss', 'cloudflare', 'vercel'],
     techStack: ['Next.js', 'React', 'TypeScript', 'Tailwind CSS', 'PDF Engine', 'Cloud Storage'],
   },
 ];
@@ -314,16 +319,9 @@ export const LabsApp: React.FC = () => {
                     </div>
                   </div>
 
-                  {/* Stack */}
-                  <div className="flex flex-wrap items-center gap-1.5 pt-1">
-                    {system.techStack.map((tech) => (
-                      <span
-                        key={tech}
-                        className="px-2.5 py-1 rounded text-[11px] font-normal bg-[#f6f6f6] text-[#333333] border border-[#e8e6e1]"
-                      >
-                        {tech}
-                      </span>
-                    ))}
+                  {/* Official Tech SVG Logos (full text breakdown lives in the detail modal) */}
+                  <div className="pt-2">
+                    <TechLogoRow items={system.techLogos} />
                   </div>
                 </div>
 
