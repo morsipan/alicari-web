@@ -4,11 +4,11 @@
   "rewrites": [
     {
       "source": "/labs",
-      "destination": "/labs.html"
+      "destination": "/labs/index.html"
     },
     {
       "source": "/labs/",
-      "destination": "/labs.html"
+      "destination": "/labs/index.html"
     },
     {
       "source": "/animate",
