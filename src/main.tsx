@@ -2,6 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import DemoOne from './components/demo'
 import { PortfolioGallery } from './components/portfolio-gallery'
+import { LabsHomeSection } from './components/labs/LabsHomeSection'
 import { BackgroundGradientAnimationDemo } from './components/cta-demo'
 import './index.css'
 
@@ -19,6 +20,15 @@ if (portfolioRoot) {
   ReactDOM.createRoot(portfolioRoot).render(
     <React.StrictMode>
       <PortfolioGallery />
+    </React.StrictMode>,
+  );
+}
+
+const labsHomeRoot = document.getElementById('labs-home-root');
+if (labsHomeRoot) {
+  ReactDOM.createRoot(labsHomeRoot).render(
+    <React.StrictMode>
+      <LabsHomeSection />
     </React.StrictMode>,
   );
 }
