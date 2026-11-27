@@ -39,27 +39,22 @@ export const LabsScrollBackground: React.FC = () => {
         gsap.set(el, {
           strokeDasharray: len,
           strokeDashoffset: len,
+          opacity: 0,
         });
       });
 
-      if (prefersReducedMotion) {
-        gsap.set(q('.blueprint-guides, .filament-raw'), { opacity: 0 });
-        gsap.set(q('.bulb-assembly'), { x: -245, y: 0, scale: 0.96 });
-        gsap.set(q('.filament-lit, .bulb-red-tint, .bulb-halo'), { opacity: 1, scale: 1 });
-        gsap.set(q('.draw-ray, .draw-dev-line, .draw-bottom'), { strokeDashoffset: 0 });
-        gsap.set(q('.devices-stage, .bottom-lines-stage'), { opacity: 1, x: 0 });
-        return;
+      // Titileo sutil de filamento en estado inicial (solo si no hay prefers-reduced-motion)
+      let flickerTween: gsap.core.Tween | null = null;
+      if (!prefersReducedMotion) {
+        flickerTween = gsap.to(q('.filament-raw'), {
+          opacity: 'random(0.35, 1)',
+          x: 'random(-1.5, 1.5)',
+          duration: 0.14,
+          repeat: -1,
+          yoyo: true,
+          ease: 'steps(2)',
+        });
       }
-
-      // Titileo sutil de filamento en estado inicial (00:00 - 00:01)
-      const flickerTween = gsap.to(q('.filament-raw'), {
-        opacity: 'random(0.35, 1)',
-        x: 'random(-1.5, 1.5)',
-        duration: 0.14,
-        repeat: -1,
-        yoyo: true,
-        ease: 'steps(2)',
-      });
 
       // Timeline maestro mapeado a los beats del video de 10s sobre el scroll (0.0 -> 1.0)
       const tl = gsap.timeline({
@@ -78,8 +73,12 @@ export const LabsScrollBackground: React.FC = () => {
           {
             opacity: 0,
             duration: 0.08,
-            onComplete: () => flickerTween.pause(),
-            onReverseComplete: () => flickerTween.play(),
+            onComplete: () => {
+              flickerTween?.pause();
+            },
+            onReverseComplete: () => {
+              flickerTween?.play();
+            },
           },
           0.06
         )
@@ -93,6 +92,7 @@ export const LabsScrollBackground: React.FC = () => {
           { opacity: 0.9, scale: 1, duration: 0.12 },
           0.07
         )
+        .to(q('.draw-ray'), { opacity: 1, duration: 0.02, stagger: 0.008 }, 0.08)
         .to(
           q('.draw-ray'),
           { strokeDashoffset: 0, duration: 0.14, stagger: 0.008 },
@@ -110,6 +110,7 @@ export const LabsScrollBackground: React.FC = () => {
           { opacity: 1, x: 0, duration: 0.12 },
           0.2
         )
+        .to(q('.draw-mod-line'), { opacity: 1, duration: 0.02, stagger: 0.012 }, 0.22)
         .to(
           q('.draw-mod-line'),
           { strokeDashoffset: 0, duration: 0.22, stagger: 0.012 },
@@ -122,6 +123,7 @@ export const LabsScrollBackground: React.FC = () => {
         { opacity: 0.85, duration: 0.08 },
         0.42
       )
+        .to(q('.draw-trail'), { opacity: 1, duration: 0.02, stagger: 0.01 }, 0.43)
         .to(
           q('.draw-trail'),
           { strokeDashoffset: 0, duration: 0.14, stagger: 0.01 },
@@ -137,6 +139,7 @@ export const LabsScrollBackground: React.FC = () => {
           { opacity: 1, x: 0, duration: 0.14 },
           0.48
         )
+        .to(q('.draw-dev-line'), { opacity: 1, duration: 0.02, stagger: 0.01 }, 0.49)
         .to(
           q('.draw-dev-line'),
           { strokeDashoffset: 0, duration: 0.2, stagger: 0.01 },
@@ -154,6 +157,7 @@ export const LabsScrollBackground: React.FC = () => {
         { opacity: 1, duration: 0.08 },
         0.68
       )
+        .to(q('.draw-bottom'), { opacity: 1, duration: 0.02, stagger: 0.015 }, 0.7)
         .to(
           q('.draw-bottom'),
           { strokeDashoffset: 0, duration: 0.28, stagger: 0.015 },
