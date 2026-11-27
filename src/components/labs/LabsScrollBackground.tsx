@@ -19,11 +19,17 @@ export const LabsScrollBackground: React.FC = () => {
       const q = gsap.utils.selector(container);
 
       // Estado inicial (0% scroll): solo bulbo wireframe con guías y filamento inestable
-      gsap.set(q('.bulb-assembly'), { opacity: 1, x: 0, y: 0, scale: 1 });
+      gsap.set(q('.bulb-assembly'), {
+        opacity: 1,
+        x: 0,
+        y: 0,
+        scale: 1,
+        svgOrigin: '640 345',
+      });
       gsap.set(q('.blueprint-guides'), { opacity: 0.7 });
       gsap.set(q('.filament-raw'), { opacity: 0.85 });
       gsap.set(q('.filament-lit, .bulb-red-tint, .bulb-halo'), { opacity: 0 });
-      gsap.set(q('.bulb-halo'), { scale: 0.7, transformOrigin: '50% 50%' });
+      gsap.set(q('.bulb-halo'), { scale: 0.7, svgOrigin: '640 345' });
 
       gsap.set(q('.modules-stage'), { opacity: 0, x: 18 });
       gsap.set(q('.devices-stage'), { opacity: 0, x: 24 });
@@ -180,12 +186,16 @@ export const LabsScrollBackground: React.FC = () => {
       });
       resizeObserver.observe(document.body);
 
+      const onLoadRefresh = () => ScrollTrigger.refresh();
+      window.addEventListener('load', onLoadRefresh);
+
       const refreshTimer = window.setTimeout(() => {
         ScrollTrigger.refresh();
       }, 250);
 
       return () => {
         window.clearTimeout(refreshTimer);
+        window.removeEventListener('load', onLoadRefresh);
         resizeObserver.disconnect();
         st.kill();
       };
@@ -198,13 +208,13 @@ export const LabsScrollBackground: React.FC = () => {
     <div
       ref={containerRef}
       aria-hidden="true"
-      className="fixed inset-0 pointer-events-none z-0 overflow-hidden bg-[#F4F3EE] flex items-center justify-center"
+      className="fixed inset-0 pointer-events-none z-0 overflow-hidden bg-[#F6F6F6] flex items-center justify-center lg:justify-end lg:pr-4 xl:pr-8"
     >
       <svg
         viewBox="0 0 1280 720"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className="w-full max-w-[1180px] h-auto opacity-35 sm:opacity-40 lg:opacity-50 select-none"
+        className="w-full max-w-[920px] xl:max-w-[1040px] h-auto opacity-30 sm:opacity-35 lg:opacity-45 select-none"
       >
         <defs>
           <radialGradient id="videoBulbGlow" cx="50%" cy="50%" r="50%">
