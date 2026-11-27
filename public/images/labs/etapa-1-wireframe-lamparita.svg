@@ -1,14 +1,50 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" width="1200" height="675" fill="none">
+  <style>
+    @keyframes gridDrift {
+      from { stroke-dashoffset: 0; }
+      to { stroke-dashoffset: 48; }
+    }
+    @keyframes sketchInterference {
+      0%, 100% { transform: translate(0, 0); opacity: 0.35; }
+      22% { transform: translate(1.8px, -0.5px); opacity: 0.52; }
+      25% { transform: translate(-2.2px, 0.4px); opacity: 0.25; }
+      28% { transform: translate(0, 0); opacity: 0.38; }
+      68% { transform: translate(-1.5px, 0.3px); opacity: 0.48; }
+      71% { transform: translate(2px, -0.4px); opacity: 0.28; }
+      74% { transform: translate(0, 0); opacity: 0.35; }
+    }
+    @keyframes sparkPulse {
+      0%, 100% { opacity: 0.35; }
+      24% { opacity: 1; }
+      28% { opacity: 0.25; }
+      70% { opacity: 0.9; }
+      76% { opacity: 0.35; }
+    }
+    @keyframes bulbFloat {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-3px); }
+    }
+    .grid-lines { animation: gridDrift 9s linear infinite; }
+    .interference-group { animation: sketchInterference 4.4s ease-in-out infinite; }
+    .spark-accent { animation: sparkPulse 3.6s ease-in-out infinite; }
+    .bulb-wireframe { animation: bulbFloat 5.5s ease-in-out infinite; }
+    @media (prefers-reduced-motion: reduce) {
+      .grid-lines, .interference-group, .spark-accent, .bulb-wireframe {
+        animation: none !important;
+        transform: none !important;
+      }
+    }
+  </style>
   <rect width="1200" height="675" fill="#F6F6F6"/>
   <!-- Subtle grid / editorial construction lines -->
-  <g stroke="#1C1C1C" stroke-opacity="0.12" stroke-width="1" stroke-dasharray="4 4">
+  <g class="grid-lines" stroke="#1C1C1C" stroke-opacity="0.14" stroke-width="1" stroke-dasharray="4 4">
     <line x1="600" y1="90" x2="600" y2="585"/>
     <line x1="360" y1="310" x2="840" y2="310"/>
     <circle cx="600" cy="300" r="145"/>
     <circle cx="600" cy="300" r="105"/>
   </g>
   <!-- Interference / glitch sketch lines -->
-  <g stroke="#1C1C1C" stroke-opacity="0.35" stroke-width="1.2">
+  <g class="interference-group" stroke="#1C1C1C" stroke-opacity="0.35" stroke-width="1.2">
     <line x1="415" y1="242" x2="505" y2="234"/>
     <line x1="695" y1="226" x2="788" y2="218"/>
     <line x1="402" y1="295" x2="482" y2="291"/>
@@ -16,11 +52,11 @@
     <line x1="430" y1="354" x2="515" y2="346"/>
     <line x1="680" y1="362" x2="765" y2="355"/>
     <!-- Subtle red interference spark -->
-    <line x1="572" y1="268" x2="586" y2="256" stroke="#CC0000" stroke-width="1.5"/>
-    <line x1="618" y1="254" x2="632" y2="265" stroke="#CC0000" stroke-width="1.5"/>
+    <line class="spark-accent" x1="572" y1="268" x2="586" y2="256" stroke="#CC0000" stroke-width="1.6"/>
+    <line class="spark-accent" x1="618" y1="254" x2="632" y2="265" stroke="#CC0000" stroke-width="1.6"/>
   </g>
   <!-- Hand-drawn wireframe bulb outline -->
-  <g stroke="#1C1C1C" stroke-linecap="round" stroke-linejoin="round">
+  <g class="bulb-wireframe" stroke="#1C1C1C" stroke-linecap="round" stroke-linejoin="round">
     <!-- Primary contour -->
     <path d="M600 185 C532 185 488 236 488 298 C488 342 514 373 534 401 C545 416 550 430 552 446 L648 446 C650 430 655 416 666 401 C686 373 712 342 712 298 C712 236 668 185 600 185 Z" stroke-width="2.2"/>
     <!-- Secondary sketchy double-stroke -->

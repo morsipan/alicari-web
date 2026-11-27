@@ -116,30 +116,7 @@ export const ScrollytellingBackground: React.FC = () => {
       aria-hidden="true"
       className="fixed inset-0 pointer-events-none z-0 overflow-hidden bg-[#F6F6F6] flex items-center justify-center"
     >
-      <style>{`
-        @keyframes labsBgInterference {
-          0%, 100% { transform: translate3d(0, 0, 0); opacity: 1; }
-          23% { transform: translate3d(0.7px, -0.3px, 0); opacity: 0.95; }
-          25% { transform: translate3d(-0.8px, 0.2px, 0); opacity: 0.9; }
-          27% { transform: translate3d(0, 0, 0); opacity: 1; }
-          66% { transform: translate3d(-0.6px, -0.2px, 0); opacity: 0.96; }
-          68% { transform: translate3d(0.7px, 0.3px, 0); opacity: 0.91; }
-          70% { transform: translate3d(0, 0, 0); opacity: 1; }
-        }
-        .labs-bg-stage1-motion {
-          animation: labsBgInterference 4.8s ease-in-out infinite;
-          will-change: transform, opacity;
-        }
-        @media (prefers-reduced-motion: reduce) {
-          .labs-bg-stage1-motion {
-            animation: none !important;
-            transform: none !important;
-            opacity: 1 !important;
-          }
-        }
-      `}</style>
-
-      {/* Stage 1: Wireframe lightbulb (0.0 -> 0.35) */}
+      {/* Stage 1: Wireframe lightbulb with internal SVG interference motion (0.00 -> 0.35) */}
       <div
         ref={stage1Ref}
         className="absolute inset-0 flex items-center justify-center p-4 sm:p-10"
@@ -148,9 +125,7 @@ export const ScrollytellingBackground: React.FC = () => {
         <img
           src="/images/labs/etapa-1-wireframe-lamparita.svg"
           alt=""
-          className={`w-full h-full max-w-[1320px] object-contain select-none ${
-            reducedMotion ? '' : 'labs-bg-stage1-motion'
-          }`}
+          className="w-full h-full max-w-[1320px] object-contain select-none"
         />
       </div>
 
