@@ -6,58 +6,54 @@ gsap.registerPlugin(ScrollTrigger);
 
 export const LabsScrollBackground: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const svgRef = useRef<SVGSVGElement>(null);
 
   useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
     const prefersReducedMotion = window.matchMedia(
       '(prefers-reduced-motion: reduce)'
     ).matches;
 
     const ctx = gsap.context(() => {
-      // Estado inicial (0% scroll): solo bulbo wireframe titilando e interferencia
-      gsap.set('.bulb-root', { opacity: 1, x: 0, y: 0, scale: 1 });
-      gsap.set('.bulb-flicker', { opacity: 0.72 });
-      gsap.set('.bulb-interference', { opacity: 0.85, x: 0 });
-      gsap.set('.bulb-filament-lit', { opacity: 0 });
-      gsap.set('.bulb-glow', { opacity: 0, scale: 0.65, transformOrigin: 'center' });
+      const q = gsap.utils.selector(container);
 
-      gsap.set('.modules-group', { opacity: 0, y: 18 });
-      gsap.set('.module-card', { opacity: 0, y: 14 });
-      gsap.set('.devices-group', { opacity: 0, y: 20 });
-      gsap.set('.device-screen-fill', { opacity: 0 });
+      gsap.set(q('.bulb-root'), { opacity: 1, x: 0, y: 0, scale: 1 });
+      gsap.set(q('.bulb-flicker'), { opacity: 0.75 });
+      gsap.set(q('.bulb-interference'), { opacity: 0.85, x: 0 });
+      gsap.set(q('.bulb-filament-lit'), { opacity: 0 });
+      gsap.set(q('.bulb-glow'), { opacity: 0, scale: 0.65, transformOrigin: 'center' });
 
-      // Preparar trazos vectoriales animados con strokeDasharray / strokeDashoffset
-      const pathSelectors = [
-        '.ray-line',
-        '.connector-path',
-        '.bridge-path',
-        '.wireframe-path',
-      ];
+      gsap.set(q('.modules-group'), { opacity: 0, y: 16 });
+      gsap.set(q('.module-card'), { opacity: 0, y: 14 });
+      gsap.set(q('.devices-group'), { opacity: 0, y: 18 });
+      gsap.set(q('.device-screen-fill'), { opacity: 0 });
 
-      pathSelectors.forEach((selector) => {
-        const els = gsap.utils.toArray<SVGGeometryElement>(selector);
-        els.forEach((el) => {
-          const length =
-            typeof el.getTotalLength === 'function' ? el.getTotalLength() : 280;
-          gsap.set(el, {
-            strokeDasharray: length,
-            strokeDashoffset: length,
-          });
+      const strokeEls = gsap.utils.toArray<SVGGeometryElement>(
+        q('.ray-line, .connector-path, .bridge-path, .wireframe-path')
+      );
+      strokeEls.forEach((el) => {
+        const len =
+          typeof el.getTotalLength === 'function' ? el.getTotalLength() : 280;
+        gsap.set(el, {
+          strokeDasharray: len,
+          strokeDashoffset: len,
         });
       });
 
       if (prefersReducedMotion) {
-        gsap.set('.bulb-interference, .bulb-flicker', { opacity: 0 });
-        gsap.set('.bulb-root', { x: -250, y: -10, scale: 0.9 });
-        gsap.set('.bulb-filament-lit', { opacity: 1 });
-        gsap.set('.bulb-glow', { opacity: 0.9, scale: 1 });
-        gsap.set('.ray-line, .bridge-path, .wireframe-path', { strokeDashoffset: 0 });
-        gsap.set('.devices-group, .device-screen-fill', { opacity: 1, y: 0 });
+        gsap.set(q('.bulb-interference, .bulb-flicker'), { opacity: 0 });
+        gsap.set(q('.bulb-root'), { x: -250, y: -12, scale: 0.9 });
+        gsap.set(q('.bulb-filament-lit'), { opacity: 1 });
+        gsap.set(q('.bulb-glow'), { opacity: 0.9, scale: 1 });
+        gsap.set(q('.ray-line, .bridge-path, .wireframe-path'), {
+          strokeDashoffset: 0,
+        });
+        gsap.set(q('.devices-group, .device-screen-fill'), { opacity: 1, y: 0 });
         return;
       }
 
-      // Titileo e interferencia continua en la etapa inicial (antes de estabilizarse con el scroll)
-      const flickerTween = gsap.to('.bulb-flicker', {
+      const flickerTween = gsap.to(q('.bulb-flicker'), {
         opacity: 'random(0.25, 1)',
         duration: 0.14,
         repeat: -1,
@@ -65,7 +61,7 @@ export const LabsScrollBackground: React.FC = () => {
         ease: 'steps(2)',
       });
 
-      const interferenceTween = gsap.to('.bulb-interference', {
+      const interferenceTween = gsap.to(q('.bulb-interference'), {
         x: 'random(-4, 4)',
         opacity: 'random(0.15, 0.9)',
         duration: 0.16,
@@ -74,23 +70,16 @@ export const LabsScrollBackground: React.FC = () => {
         ease: 'none',
       });
 
-      // Timeline principal sincronizado al scroll de la página
       const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: document.documentElement,
-          start: 'top top',
-          end: 'bottom bottom',
-          scrub: 0.65,
-          invalidateOnRefresh: true,
-        },
+        paused: true,
+        defaults: { ease: 'none' },
       });
 
-      // 1. Etapa 1 -> Etapa 2 (0% a 52%): se apaga interferencia, irradia rojo y arma módulos
       tl.to(
-        ['.bulb-interference', '.bulb-flicker'],
+        q('.bulb-interference, .bulb-flicker'),
         {
           opacity: 0,
-          duration: 0.1,
+          duration: 0.08,
           onComplete: () => {
             flickerTween.pause();
             interferenceTween.pause();
@@ -100,137 +89,63 @@ export const LabsScrollBackground: React.FC = () => {
             interferenceTween.play();
           },
         },
-        0.04
+        0.02
       )
+        .to(q('.bulb-root'), { y: -118, scale: 0.84, duration: 0.18 }, 0.05)
+        .to(q('.bulb-filament-lit'), { opacity: 1, duration: 0.1 }, 0.08)
+        .to(q('.bulb-glow'), { opacity: 0.85, scale: 1, duration: 0.14 }, 0.1)
+        .to(q('.ray-line'), { strokeDashoffset: 0, duration: 0.16, stagger: 0.01 }, 0.12)
+        .to(q('.modules-group'), { opacity: 1, y: 0, duration: 0.08 }, 0.16)
         .to(
-          '.bulb-root',
-          {
-            y: -118,
-            scale: 0.84,
-            duration: 0.22,
-            ease: 'power2.inOut',
-          },
-          0.08
-        )
-        .to(
-          '.bulb-filament-lit',
-          {
-            opacity: 1,
-            duration: 0.14,
-          },
-          0.12
-        )
-        .to(
-          '.bulb-glow',
-          {
-            opacity: 0.85,
-            scale: 1,
-            duration: 0.18,
-          },
-          0.14
-        )
-        .to(
-          '.ray-line',
-          {
-            strokeDashoffset: 0,
-            duration: 0.18,
-            stagger: 0.015,
-            ease: 'power2.out',
-          },
+          q('.connector-path'),
+          { strokeDashoffset: 0, duration: 0.2, stagger: 0.015 },
           0.18
         )
+        .to(q('.module-card'), { opacity: 1, y: 0, duration: 0.16, stagger: 0.02 }, 0.24);
+
+      tl.to(
+        q('.modules-group, .connector-path, .module-card'),
+        { opacity: 0, y: -14, duration: 0.12 },
+        0.5
+      )
+        .to(q('.bulb-root'), { x: -250, y: -12, scale: 0.9, duration: 0.2 }, 0.54)
+        .to(q('.bridge-path'), { strokeDashoffset: 0, duration: 0.12 }, 0.66)
+        .to(q('.devices-group'), { opacity: 1, y: 0, duration: 0.12 }, 0.68)
         .to(
-          '.modules-group',
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.12,
-          },
-          0.24
+          q('.wireframe-path'),
+          { strokeDashoffset: 0, duration: 0.2, stagger: 0.01 },
+          0.7
         )
         .to(
-          '.connector-path',
-          {
-            strokeDashoffset: 0,
-            duration: 0.24,
-            stagger: 0.03,
-            ease: 'power2.inOut',
-          },
-          0.26
-        )
-        .to(
-          '.module-card',
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.2,
-            stagger: 0.035,
-            ease: 'power2.out',
-          },
-          0.34
+          q('.device-screen-fill'),
+          { opacity: 1, duration: 0.14, stagger: 0.01 },
+          0.8
         );
 
-      // 2. Etapa 2 -> Etapa 3 (55% a 100%): módulos pasan a prototipos multidevice con lámpara encendida
-      tl.to(
-        ['.modules-group', '.connector-path', '.module-card'],
-        {
-          opacity: 0,
-          y: -14,
-          duration: 0.16,
-          ease: 'power2.in',
-        },
-        0.56
-      )
-        .to(
-          '.bulb-root',
-          {
-            x: -250,
-            y: -12,
-            scale: 0.9,
-            duration: 0.24,
-            ease: 'power2.inOut',
-          },
-          0.6
-        )
-        .to(
-          '.bridge-path',
-          {
-            strokeDashoffset: 0,
-            duration: 0.14,
-            ease: 'power2.out',
-          },
-          0.72
-        )
-        .to(
-          '.devices-group',
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.16,
-          },
-          0.74
-        )
-        .to(
-          '.wireframe-path',
-          {
-            strokeDashoffset: 0,
-            duration: 0.22,
-            stagger: 0.015,
-            ease: 'power2.out',
-          },
-          0.76
-        )
-        .to(
-          '.device-screen-fill',
-          {
-            opacity: 1,
-            duration: 0.18,
-            stagger: 0.015,
-            ease: 'power2.out',
-          },
-          0.84
-        );
-    }, containerRef);
+      const st = ScrollTrigger.create({
+        trigger: document.documentElement,
+        start: 'top top',
+        end: 'bottom bottom',
+        scrub: 0.5,
+        animation: tl,
+        invalidateOnRefresh: true,
+      });
+
+      const resizeObserver = new ResizeObserver(() => {
+        ScrollTrigger.refresh();
+      });
+      resizeObserver.observe(document.body);
+
+      const refreshTimer = window.setTimeout(() => {
+        ScrollTrigger.refresh();
+      }, 250);
+
+      return () => {
+        window.clearTimeout(refreshTimer);
+        resizeObserver.disconnect();
+        st.kill();
+      };
+    }, container);
 
     return () => ctx.revert();
   }, []);
@@ -242,25 +157,22 @@ export const LabsScrollBackground: React.FC = () => {
       className="fixed inset-0 pointer-events-none z-0 overflow-hidden bg-[#F6F6F6] flex items-center justify-center lg:justify-end lg:pr-8"
     >
       <svg
-        ref={svgRef}
         viewBox="0 0 1100 650"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
         className="w-full max-w-[940px] h-auto opacity-30 sm:opacity-35 lg:opacity-45 select-none"
       >
         <defs>
-          <radialGradient id="labRedGlow" cx="50%" cy="50%" r="50%">
+          <radialGradient id="labRedGlowFix" cx="50%" cy="50%" r="50%">
             <stop offset="0%" stopColor="#CC0000" stopOpacity="0.25" />
             <stop offset="65%" stopColor="#CC0000" stopOpacity="0.06" />
             <stop offset="100%" stopColor="#CC0000" stopOpacity="0" />
           </radialGradient>
         </defs>
 
-        {/* ETAPA 1 -> 3: LAMPARITA CON TITILEO, RAYOS ROJOS E IRRADIACIÓN */}
         <g className="bulb-root">
-          <circle cx="550" cy="295" r="155" fill="url(#labRedGlow)" className="bulb-glow" />
+          <circle cx="550" cy="295" r="155" fill="url(#labRedGlowFix)" className="bulb-glow" />
 
-          {/* Interferencia inicial */}
           <g className="bulb-interference" strokeLinecap="round">
             <line x1="388" y1="242" x2="465" y2="234" stroke="#1C1C1C" strokeWidth="1.3" />
             <line x1="635" y1="226" x2="716" y2="218" stroke="#1C1C1C" strokeWidth="1.3" />
@@ -271,7 +183,6 @@ export const LabsScrollBackground: React.FC = () => {
             <line x1="566" y1="252" x2="580" y2="263" stroke="#CC0000" strokeWidth="1.8" />
           </g>
 
-          {/* Rayos rojos */}
           <g stroke="#CC0000" strokeWidth="2.5" strokeLinecap="round">
             <line x1="550" y1="158" x2="550" y2="184" className="ray-line" />
             <line x1="482" y1="178" x2="496" y2="200" className="ray-line" />
@@ -282,7 +193,6 @@ export const LabsScrollBackground: React.FC = () => {
             <line x1="680" y1="288" x2="654" y2="288" className="ray-line" />
           </g>
 
-          {/* Bulbo */}
           <g stroke="#1C1C1C" strokeLinecap="round" strokeLinejoin="round">
             <path
               d="M550 205 C492 205 454 248 454 300 C454 337 476 363 493 386 C502 399 506 410 508 424 L592 424 C594 410 598 399 607 386 C624 363 646 337 646 300 C646 248 608 205 550 205 Z"
@@ -306,7 +216,6 @@ export const LabsScrollBackground: React.FC = () => {
           </g>
         </g>
 
-        {/* ETAPA 2: CONECTORES ROJOS Y MÓDULOS DE TRABAJO */}
         <g className="modules-group">
           <g stroke="#CC0000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M538 355 L538 395 L260 395 L260 430" className="connector-path" />
@@ -352,7 +261,6 @@ export const LabsScrollBackground: React.FC = () => {
           </g>
         </g>
 
-        {/* ETAPA 3: WIREFRAMES Y PROTOTIPOS MULTIDEVICE */}
         <g>
           <line
             x1="415"
