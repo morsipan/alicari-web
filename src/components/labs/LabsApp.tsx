@@ -5,7 +5,6 @@ import {
   CheckCircle2,
   Code2,
   FileText,
-  Layers,
   Workflow,
   X,
   Zap,
@@ -198,8 +197,8 @@ export const LabsApp: React.FC = () => {
       {/* ── Foreground Editorial Content (relative z-10) ───────────────── */}
       <main className="relative z-10">
         {/* ── Editorial Header & Stipple-to-Solid DotReveal Headline ───── */}
-        <header className="pt-14 sm:pt-20 pb-12 sm:pb-16 px-5 sm:px-8 lg:px-12 max-w-6xl mx-auto border-b border-[#e8e6e1]/90">
-          <div className="max-w-4xl">
+        <header className="pt-16 pb-24 md:pt-24 md:pb-36 px-5 sm:px-8 lg:px-12 max-w-7xl mx-auto">
+          <div className="max-w-2xl lg:max-w-[640px]">
             <p className="inline-flex items-center gap-2 text-[11px] font-medium tracking-[0.16em] text-[#666666] uppercase mb-6">
               <span className="w-1.5 h-1.5 rounded-full bg-[#cc0000]" aria-hidden="true" />
               <span>Alicari Labs · AI Developer · Diseño Multimedia & UX/UI</span>
@@ -211,7 +210,7 @@ export const LabsApp: React.FC = () => {
               className="mb-8"
             />
 
-            <p className="text-base sm:text-lg text-[#3a3a3a] font-light leading-relaxed max-w-3xl mb-8 bg-[#F6F6F6]/70 backdrop-blur-[2px] rounded-xl p-1 -m-1">
+            <p className="text-base sm:text-lg text-[#3a3a3a] font-light leading-relaxed mb-8 bg-[#F6F6F6]/80 backdrop-blur-[2px] rounded-xl p-3 -mx-3">
               Alicari Labs reúne los sistemas propios que desarrollo como{' '}
               <strong className="font-medium text-[#010101]">AI Developer</strong>, apalancados en mi
               experiencia en{' '}
@@ -220,182 +219,140 @@ export const LabsApp: React.FC = () => {
               de producto, automatización e interfaces claras sin fricción.
             </p>
 
-            <dl className="grid grid-cols-2 sm:grid-cols-4 gap-y-5 gap-x-6 pt-6 border-t border-[#e0ddd6]/90 bg-[#F6F6F6]/65 backdrop-blur-[2px] rounded-xl p-3 -mx-3">
+            <dl className="grid grid-cols-2 sm:grid-cols-4 gap-y-4 gap-x-5 pt-5 border-t border-[#dedbd3]/90 bg-[#F6F6F6]/75 backdrop-blur-[2px] rounded-xl p-3 -mx-3">
               <div>
-                <dt className="text-[11px] uppercase tracking-[0.12em] text-[#78756e] mb-1">Perfil</dt>
-                <dd className="text-sm font-medium text-[#010101] m-0">AI Developer + UX/UI</dd>
+                <dt className="text-[10px] uppercase tracking-[0.12em] text-[#78756e] mb-1">Perfil</dt>
+                <dd className="text-xs sm:text-sm font-medium text-[#010101] m-0">AI Developer + UX/UI</dd>
               </div>
               <div>
-                <dt className="text-[11px] uppercase tracking-[0.12em] text-[#78756e] mb-1">Foco</dt>
-                <dd className="text-sm font-medium text-[#010101] m-0">Sistemas & Automatización</dd>
+                <dt className="text-[10px] uppercase tracking-[0.12em] text-[#78756e] mb-1">Foco</dt>
+                <dd className="text-xs sm:text-sm font-medium text-[#010101] m-0">Sistemas & IA</dd>
               </div>
               <div>
-                <dt className="text-[11px] uppercase tracking-[0.12em] text-[#78756e] mb-1">Sistemas</dt>
-                <dd className="text-sm font-medium text-[#010101] m-0">3 plataformas activas</dd>
+                <dt className="text-[10px] uppercase tracking-[0.12em] text-[#78756e] mb-1">Sistemas</dt>
+                <dd className="text-xs sm:text-sm font-medium text-[#010101] m-0">3 en producción</dd>
               </div>
               <div>
-                <dt className="text-[11px] uppercase tracking-[0.12em] text-[#78756e] mb-1">Criterio</dt>
-                <dd className="text-sm font-medium text-[#010101] m-0">Producto & Usabilidad</dd>
+                <dt className="text-[10px] uppercase tracking-[0.12em] text-[#78756e] mb-1">Criterio</dt>
+                <dd className="text-xs sm:text-sm font-medium text-[#010101] m-0">Producto & UX</dd>
               </div>
             </dl>
           </div>
         </header>
 
-        {/* ── Systems Showcase ─────────────────────────────────────────── */}
-      <section
-        aria-label="Sistemas desarrollados en Alicari Labs"
-        className="py-12 sm:py-16 px-5 sm:px-8 lg:px-12 max-w-6xl mx-auto"
-      >
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-10">
-          <div>
-            <h2 className="text-xl sm:text-2xl font-medium tracking-[-0.015em] text-[#010101] m-0">
+        {/* ── Systems Showcase (Airy Left-Anchored Editorial Runway) ───── */}
+        <section
+          aria-label="Sistemas desarrollados en Alicari Labs"
+          className="py-20 md:py-32 pb-28 md:pb-44 px-5 sm:px-8 lg:px-12 max-w-7xl mx-auto"
+        >
+          <div className="max-w-xl lg:max-w-[580px] mb-16 md:mb-24 bg-[#F6F6F6]/80 backdrop-blur-[2px] rounded-xl p-3 -mx-3">
+            <p className="text-[11px] uppercase tracking-[0.16em] text-[#8a8a8a] m-0 mb-2">
+              01 — 03 · Sistemas Operativos
+            </p>
+            <h2 className="text-2xl sm:text-3xl font-medium tracking-[-0.02em] text-[#010101] m-0">
               Sistemas en Alicari Labs
             </h2>
-            <p className="text-sm text-[#666666] font-light mt-1 m-0">
+            <p className="text-sm text-[#555555] font-light mt-2 m-0 leading-relaxed">
               Arquitectura, flujos operativos, automatización y experiencia de usuario aplicada a problemas reales.
             </p>
           </div>
-          <span className="text-[11px] uppercase tracking-[0.14em] text-[#8a8a8a]">
-            01 — 03 · Sistemas Operativos
-          </span>
-        </div>
 
-        <div className="space-y-8">
-          {LAB_SYSTEMS.map((system) => (
-            <article
-              key={system.id}
-              className="bg-white/90 backdrop-blur-[2px] rounded-xl border border-[#e8e6e1] p-6 sm:p-9 transition-all duration-300 hover:border-[#cfccc4] hover:shadow-[0_12px_36px_rgba(1,1,1,0.05)]"
-            >
-              {/* Top Bar: Official Logo + Category + Index */}
-              <div className="flex flex-wrap items-center justify-between gap-4 pb-6 mb-6 border-b border-[#efede8]">
-                <div className="flex items-center gap-4 min-w-0">
-                  <div
-                    className={`px-3.5 py-2 rounded-lg border flex items-center shrink-0 ${
-                      system.logoBg === 'dark'
-                        ? 'bg-[#010101] border-[#010101]'
-                        : 'bg-[#fafafa] border-[#e8e6e1]'
-                    }`}
+          <div className="space-y-24 md:space-y-40 max-w-xl lg:max-w-[580px]">
+            {LAB_SYSTEMS.map((system) => (
+              <article
+                key={system.id}
+                className="bg-[#F6F6F6]/82 hover:bg-white/92 backdrop-blur-[3px] rounded-2xl border border-[#dedbd3]/90 hover:border-[#cfccc4] p-6 sm:p-7 transition-all duration-300 shadow-[0_6px_28px_rgba(1,1,1,0.03)] hover:shadow-[0_14px_38px_rgba(1,1,1,0.06)]"
+              >
+                {/* Top Bar: Official Logo + Index */}
+                <div className="flex items-center justify-between gap-4 pb-5 mb-5 border-b border-[#e5e2dc]">
+                  <div className="flex items-center gap-3.5 min-w-0">
+                    <div
+                      className={`px-3 py-2 rounded-lg border flex items-center shrink-0 ${
+                        system.logoBg === 'dark'
+                          ? 'bg-[#010101] border-[#010101]'
+                          : 'bg-white border-[#e5e2dc]'
+                      }`}
+                    >
+                      <img
+                        src={system.logo}
+                        alt={`Logotipo oficial de ${system.name}`}
+                        style={{ height: system.logoHeight, width: 'auto' }}
+                        className="block max-w-[140px] object-contain"
+                        loading="lazy"
+                      />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-[10px] uppercase tracking-[0.12em] text-[#78756e] m-0 truncate">
+                        {system.category}
+                      </p>
+                      <h3 className="text-xl font-medium tracking-[-0.015em] text-[#010101] m-0 mt-0.5">
+                        {system.name}
+                      </h3>
+                    </div>
+                  </div>
+
+                  <span className="text-[11px] font-medium tracking-[0.14em] text-[#8a8a8a] tabular-nums shrink-0">
+                    SYS / {system.index}
+                  </span>
+                </div>
+
+                {/* Concise Copy */}
+                <p className="text-base text-[#010101] font-normal leading-snug m-0 mb-3">
+                  {system.tagline}
+                </p>
+
+                <p className="text-sm text-[#4a4a4a] font-light leading-relaxed m-0 mb-5">
+                  {system.summary}
+                </p>
+
+                {/* Compact Operational Highlights */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-5">
+                  {system.highlights.map((item) => (
+                    <div
+                      key={item.label}
+                      className="px-2.5 py-2 rounded-lg bg-white/75 border border-[#e6e4de]"
+                    >
+                      <div className="text-xs sm:text-sm font-medium text-[#010101] truncate">
+                        {item.value}
+                      </div>
+                      <div className="text-[9px] uppercase tracking-[0.08em] text-[#78756e] mt-0.5 leading-tight truncate">
+                        {item.label}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Official Tech SVG Logos */}
+                <div className="pb-5 mb-5 border-b border-[#e5e2dc]">
+                  <TechLogoRow items={system.techLogos} />
+                </div>
+
+                {/* Compact Action Row */}
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
+                  <a
+                    href={system.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 min-h-[44px] px-4 py-2.5 rounded-lg bg-[#010101] hover:bg-[#cc0000] text-white text-xs font-medium tracking-[0.1em] uppercase transition-colors flex items-center justify-center gap-2 no-underline focus:outline-none focus:ring-2 focus:ring-[#cc0000] focus:ring-offset-2"
+                    aria-label={`Abrir sitio oficial de ${system.name} en una nueva pestaña`}
                   >
-                    <img
-                      src={system.logo}
-                      alt={`Logotipo oficial de ${system.name}`}
-                      style={{ height: system.logoHeight, width: 'auto' }}
-                      className="block max-w-[160px] object-contain"
-                      loading="lazy"
-                    />
-                  </div>
-                  <div className="min-w-0">
-                    <p className="text-[11px] uppercase tracking-[0.12em] text-[#8a8a8a] m-0 truncate">
-                      {system.category}
-                    </p>
-                    <h3 className="text-xl sm:text-2xl font-medium tracking-[-0.015em] text-[#010101] m-0 mt-0.5">
-                      {system.name}
-                    </h3>
-                  </div>
+                    <span>{system.domain}</span>
+                    <ArrowUpRight className="w-4 h-4 shrink-0" aria-hidden="true" />
+                  </a>
+
+                  <button
+                    type="button"
+                    onClick={() => setSelectedSystem(system)}
+                    className="sm:w-auto min-h-[44px] px-4 py-2.5 rounded-lg bg-white/85 hover:bg-white text-[#010101] text-xs font-medium tracking-[0.1em] uppercase border border-[#dedbd3] transition-colors flex items-center justify-center gap-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#010101] focus:ring-offset-2"
+                  >
+                    <FileText className="w-3.5 h-3.5 text-[#78756e]" aria-hidden="true" />
+                    <span>Detalle</span>
+                  </button>
                 </div>
-
-                <span className="text-xs font-medium tracking-[0.14em] text-[#8a8a8a] tabular-nums">
-                  SYS / {system.index}
-                </span>
-              </div>
-
-              {/* Main 2-Column Content */}
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10">
-                {/* Left: Description, Operational Flow & UX/Automation */}
-                <div className="lg:col-span-8 space-y-5">
-                  <p className="text-base sm:text-[1.0625rem] text-[#010101] font-normal leading-snug m-0">
-                    {system.tagline}
-                  </p>
-
-                  <p className="text-sm text-[#4a4a4a] font-light leading-relaxed m-0">
-                    {system.summary}
-                  </p>
-
-                  {/* Architecture & Flow Details */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 pt-1">
-                    <div className="p-4 rounded-lg bg-[#fafaf8] border border-[#eceae4]">
-                      <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.12em] font-medium text-[#010101] mb-1.5">
-                        <Workflow className="w-3.5 h-3.5 text-[#cc0000] shrink-0" aria-hidden="true" />
-                        <span>Flujo Operativo</span>
-                      </div>
-                      <p className="text-xs text-[#555555] font-light leading-relaxed m-0">
-                        {system.operationalFlow}
-                      </p>
-                    </div>
-
-                    <div className="p-4 rounded-lg bg-[#fafaf8] border border-[#eceae4]">
-                      <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.12em] font-medium text-[#010101] mb-1.5">
-                        <Layers className="w-3.5 h-3.5 text-[#cc0000] shrink-0" aria-hidden="true" />
-                        <span>UX & Automatización</span>
-                      </div>
-                      <p className="text-xs text-[#555555] font-light leading-relaxed m-0">
-                        {system.uxAndAutomation}
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Official Tech SVG Logos (full text breakdown lives in the detail modal) */}
-                  <div className="pt-2">
-                    <TechLogoRow items={system.techLogos} />
-                  </div>
-                </div>
-
-                {/* Right: Key Specs, Role & Actions */}
-                <div className="lg:col-span-4 flex flex-col justify-between gap-6 lg:border-l lg:border-[#efede8] lg:pl-8">
-                  <div className="space-y-4">
-                    <div className="grid grid-cols-2 gap-2.5">
-                      {system.highlights.map((item) => (
-                        <div
-                          key={item.label}
-                          className="p-3 rounded-lg bg-[#fafaf8] border border-[#eceae4]"
-                        >
-                          <div className="text-sm sm:text-base font-medium text-[#010101]">
-                            {item.value}
-                          </div>
-                          <div className="text-[10px] uppercase tracking-[0.1em] text-[#8a8a8a] mt-0.5 leading-tight">
-                            {item.label}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-
-                    <div className="pt-1">
-                      <div className="text-[10px] uppercase tracking-[0.12em] text-[#8a8a8a] mb-1">
-                        Alcance Técnico y de Producto
-                      </div>
-                      <p className="text-xs text-[#333333] font-normal leading-relaxed m-0">
-                        {system.role}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col gap-2.5">
-                    <a
-                      href={system.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-full min-h-[44px] px-4 py-2.5 rounded-lg bg-[#010101] hover:bg-[#cc0000] text-white text-xs font-medium tracking-[0.1em] uppercase transition-colors flex items-center justify-center gap-2 no-underline focus:outline-none focus:ring-2 focus:ring-[#cc0000] focus:ring-offset-2"
-                      aria-label={`Abrir sitio oficial de ${system.name} en una nueva pestaña`}
-                    >
-                      <span>{system.domain}</span>
-                      <ArrowUpRight className="w-4 h-4 shrink-0" aria-hidden="true" />
-                    </a>
-
-                    <button
-                      type="button"
-                      onClick={() => setSelectedSystem(system)}
-                      className="w-full min-h-[44px] px-4 py-2.5 rounded-lg bg-white hover:bg-[#f6f6f6] text-[#010101] text-xs font-medium tracking-[0.1em] uppercase border border-[#dedbd3] transition-colors flex items-center justify-center gap-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#010101] focus:ring-offset-2"
-                    >
-                      <FileText className="w-3.5 h-3.5 text-[#8a8a8a]" aria-hidden="true" />
-                      <span>Arquitectura del sistema</span>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </article>
-          ))}
-        </div>
-      </section>
+              </article>
+            ))}
+          </div>
+        </section>
 
       {/* ── Technical Specification Modal ──────────────────────────────── */}
       {selectedSystem && (
@@ -451,15 +408,26 @@ export const LabsApp: React.FC = () => {
               {selectedSystem.tagline}
             </p>
 
-            {/* Problem */}
-            <div className="p-4 rounded-xl bg-[#fafaf8] border border-[#eceae4] mb-6">
-              <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.12em] font-medium text-[#cc0000] mb-1.5">
-                <Zap className="w-3.5 h-3.5" aria-hidden="true" />
-                <span>Problema Operativo Resuelto</span>
+            {/* Problem & Operational Flow */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+              <div className="p-4 rounded-xl bg-[#fafaf8] border border-[#eceae4]">
+                <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.12em] font-medium text-[#cc0000] mb-1.5">
+                  <Zap className="w-3.5 h-3.5" aria-hidden="true" />
+                  <span>Problema Operativo</span>
+                </div>
+                <p className="text-xs text-[#4a4a4a] font-light leading-relaxed m-0">
+                  {selectedSystem.problem}
+                </p>
               </div>
-              <p className="text-xs sm:text-sm text-[#4a4a4a] font-light leading-relaxed m-0">
-                {selectedSystem.problem}
-              </p>
+              <div className="p-4 rounded-xl bg-[#fafaf8] border border-[#eceae4]">
+                <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.12em] font-medium text-[#010101] mb-1.5">
+                  <Workflow className="w-3.5 h-3.5 text-[#cc0000]" aria-hidden="true" />
+                  <span>Flujo & UX</span>
+                </div>
+                <p className="text-xs text-[#4a4a4a] font-light leading-relaxed m-0">
+                  {selectedSystem.operationalFlow}
+                </p>
+              </div>
             </div>
 
             {/* Architecture */}
