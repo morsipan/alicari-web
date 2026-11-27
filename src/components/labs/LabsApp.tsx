@@ -12,7 +12,7 @@ import {
 } from 'lucide-react';
 import { TechLogoRow, type TechKey } from './TechLogoRow';
 import { DotRevealHeadline, type DotRevealLineSpec } from './DotRevealHeadline';
-import { ScrollytellingLabBackground } from './ScrollytellingLabBackground';
+import { LabsScrollBackground } from './LabsScrollBackground';
 
 const LABS_HEADLINE_LINES: DotRevealLineSpec[] = [
   { text: 'ALICARI' },
@@ -192,8 +192,8 @@ export const LabsApp: React.FC = () => {
 
   return (
     <div className="relative min-h-screen text-[#010101] selection:bg-[#cc0000] selection:text-white overflow-x-clip">
-      {/* ── Fixed Scroll-Driven Vector Motion Graphics Background (z-0) ── */}
-      <ScrollytellingLabBackground />
+      {/* ── Fixed GSAP ScrollTrigger Vector Motion Graphics Background (z-0) */}
+      <LabsScrollBackground />
 
       {/* ── Foreground Editorial Content (relative z-10) ───────────────── */}
       <main className="relative z-10">
