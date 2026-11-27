@@ -11,6 +11,13 @@ import {
   Zap,
 } from 'lucide-react';
 import { TechLogoRow, type TechKey } from './TechLogoRow';
+import { DotRevealHeadline, type DotRevealLineSpec } from './DotRevealHeadline';
+
+const LABS_HEADLINE_LINES: DotRevealLineSpec[] = [
+  { text: 'ALICARI' },
+  { text: 'LABS.', accent: true },
+  { text: 'SISTEMAS.' },
+];
 
 export interface LabSystem {
   id: string;
@@ -184,19 +191,21 @@ export const LabsApp: React.FC = () => {
 
   return (
     <main className="min-h-screen bg-[#f6f6f6] text-[#010101] selection:bg-[#cc0000] selection:text-white overflow-x-hidden">
-      {/* ── Editorial Header & Positioning ─────────────────────────────── */}
+      {/* ── Editorial Header & Stipple-to-Solid DotReveal Headline ─────── */}
       <header className="pt-14 sm:pt-20 pb-12 sm:pb-16 px-5 sm:px-8 lg:px-12 max-w-6xl mx-auto border-b border-[#e8e6e1]">
-        <div className="max-w-3xl">
-          <p className="inline-flex items-center gap-2 text-[11px] font-medium tracking-[0.16em] text-[#8a8a8a] uppercase mb-5">
+        <div className="max-w-4xl">
+          <p className="inline-flex items-center gap-2 text-[11px] font-medium tracking-[0.16em] text-[#8a8a8a] uppercase mb-6">
             <span className="w-1.5 h-1.5 rounded-full bg-[#cc0000]" aria-hidden="true" />
             <span>Alicari Labs · AI Developer · Diseño Multimedia & UX/UI</span>
           </p>
 
-          <h1 className="text-3xl sm:text-5xl lg:text-[3.5rem] font-medium tracking-[-0.025em] text-[#010101] leading-[1.08] mb-6">
-            Sistemas digitales diseñados y construidos de punta a punta.
-          </h1>
+          <DotRevealHeadline
+            lines={LABS_HEADLINE_LINES}
+            accessibleHeading="Alicari Labs — Sistemas digitales diseñados y construidos de punta a punta."
+            className="mb-8"
+          />
 
-          <p className="text-base sm:text-lg text-[#4a4a4a] font-light leading-relaxed mb-8">
+          <p className="text-base sm:text-lg text-[#4a4a4a] font-light leading-relaxed max-w-3xl mb-8">
             Alicari Labs reúne los sistemas propios que desarrollo como{' '}
             <strong className="font-medium text-[#010101]">AI Developer</strong>, apalancados en mi
             experiencia en{' '}
