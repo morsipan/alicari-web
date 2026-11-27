@@ -109,27 +109,29 @@ export const LabsScrollBackground: React.FC = () => {
         )
         .to(q('.module-card'), { opacity: 1, y: 0, duration: 0.16, stagger: 0.02 }, 0.24);
 
-      // Fase 2 -> Fase 3 (50% a 100% del scroll)
+      // Fase 2 -> Fase 3 (55% a 95% del scroll, garantizando escena completa al llegar al cierre)
       tl.to(
         q('.modules-group, .connector-path, .module-card'),
-        { opacity: 0, y: -14, duration: 0.12 },
-        0.5
+        { opacity: 0, y: -14, duration: 0.1 },
+        0.55
       )
-        .to(q('.bulb-root'), { x: -245, y: -10, scale: 0.9, duration: 0.2 }, 0.54)
-        .to(q('.bridge-path'), { opacity: 1, duration: 0.02 }, 0.66)
-        .to(q('.bridge-path'), { strokeDashoffset: 0, duration: 0.12 }, 0.66)
-        .to(q('.devices-group'), { opacity: 1, y: 0, duration: 0.12 }, 0.68)
-        .to(q('.wireframe-path'), { opacity: 1, duration: 0.02, stagger: 0.01 }, 0.7)
+        .to(q('.bulb-root'), { x: -245, y: -10, scale: 0.9, duration: 0.16 }, 0.58)
+        .to(q('.bridge-path'), { opacity: 1, duration: 0.02 }, 0.68)
+        .to(q('.bridge-path'), { strokeDashoffset: 0, duration: 0.1 }, 0.68)
+        .to(q('.devices-group'), { opacity: 1, y: 0, duration: 0.1 }, 0.7)
+        .to(q('.wireframe-path'), { opacity: 1, duration: 0.02, stagger: 0.006 }, 0.72)
         .to(
           q('.wireframe-path'),
-          { strokeDashoffset: 0, duration: 0.2, stagger: 0.01 },
-          0.7
+          { strokeDashoffset: 0, duration: 0.15, stagger: 0.006 },
+          0.72
         )
         .to(
           q('.device-screen-fill'),
-          { opacity: 1, duration: 0.14, stagger: 0.01 },
-          0.8
-        );
+          { opacity: 1, duration: 0.1, stagger: 0.008 },
+          0.82
+        )
+        // Tramo final (0.95 -> 1.00) en reposo con toda la escena desplegada
+        .to({}, { duration: 0.05 }, 0.95);
 
       const st = ScrollTrigger.create({
         trigger: document.documentElement,
@@ -163,13 +165,13 @@ export const LabsScrollBackground: React.FC = () => {
     <div
       ref={containerRef}
       aria-hidden="true"
-      className="fixed inset-0 pointer-events-none z-0 overflow-hidden bg-[#F6F6F6] flex items-center justify-center lg:justify-end lg:pr-8"
+      className="fixed inset-0 pointer-events-none z-0 overflow-hidden bg-[#F6F6F6] flex items-center justify-center lg:justify-end lg:pr-6 xl:pr-10"
     >
       <svg
         viewBox="0 0 1100 650"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className="w-full max-w-[940px] h-auto opacity-30 sm:opacity-35 lg:opacity-45 select-none"
+        className="w-full max-w-[820px] xl:max-w-[900px] h-auto opacity-30 sm:opacity-35 lg:opacity-40 select-none"
       >
         <defs>
           <radialGradient id="labRedGlowFix" cx="50%" cy="50%" r="50%">

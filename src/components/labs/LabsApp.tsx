@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
+  ArrowRight,
   ArrowUpRight,
   Check,
   CheckCircle2,
@@ -243,7 +244,7 @@ export const LabsApp: React.FC = () => {
         {/* ── Systems Showcase (Airy Left-Anchored Editorial Runway) ───── */}
         <section
           aria-label="Sistemas desarrollados en Alicari Labs"
-          className="py-20 md:py-32 pb-28 md:pb-44 px-5 sm:px-8 lg:px-12 max-w-7xl mx-auto"
+          className="py-20 md:py-32 px-5 sm:px-8 lg:px-12 max-w-7xl mx-auto"
         >
           <div className="max-w-xl lg:max-w-[580px] mb-16 md:mb-24 bg-[#F6F6F6]/80 backdrop-blur-[2px] rounded-xl p-3 -mx-3">
             <p className="text-[11px] uppercase tracking-[0.16em] text-[#8a8a8a] m-0 mb-2">
@@ -351,6 +352,47 @@ export const LabsApp: React.FC = () => {
                 </div>
               </article>
             ))}
+          </div>
+        </section>
+
+        {/* ── Closing Lead-Conversion Section (Left-Anchored Asymmetry) ── */}
+        <section
+          aria-labelledby="labs-closing-heading"
+          className="mt-28 md:mt-40 py-24 md:py-36 px-5 sm:px-8 lg:px-12 max-w-7xl mx-auto"
+        >
+          <div className="max-w-xl bg-[#F6F6F6]/85 backdrop-blur-[2px] border-t border-[#dedbd3] pt-8 sm:pt-10 pb-4 pr-2 sm:pr-6">
+            <p className="inline-flex items-center gap-2 font-mono text-[11px] font-medium tracking-[0.14em] text-[#78756e] uppercase m-0 mb-4">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#CC0000]" aria-hidden="true" />
+              <span>PROYECTOS A MEDIDA · DE LA IDEA A PRODUCCIÓN</span>
+            </p>
+
+            <h2
+              id="labs-closing-heading"
+              className="text-2xl sm:text-4xl font-medium tracking-[-0.025em] text-[#1C1C1C] leading-[1.12] m-0 mb-5"
+            >
+              ¿Tenés una idea o un proceso que necesita convertirse en sistema?
+            </h2>
+
+            <p className="text-sm sm:text-base text-[#4a4a4a] font-light leading-relaxed m-0 mb-8">
+              Combino criterio de Diseño Multimedia y UX/UI con ingeniería de software asistida por
+              IA para analizar factibilidad, estructurar la arquitectura y llevar productos digitales
+              reales a producción de punta a punta.
+            </p>
+
+            <a
+              href="/#contacto"
+              onClick={(e) => {
+                const trigger = document.querySelector('.js-contact-trigger') as HTMLElement | null;
+                if (trigger) {
+                  e.preventDefault();
+                  trigger.click();
+                }
+              }}
+              className="inline-flex items-center gap-2.5 min-h-[48px] px-6 py-3 rounded-lg bg-[#1C1C1C] hover:bg-[#CC0000] text-white text-xs sm:text-sm font-medium tracking-[0.06em] no-underline transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#CC0000] focus-visible:ring-offset-2"
+            >
+              <span>Conversemos sobre tu proyecto</span>
+              <ArrowRight className="w-4 h-4 shrink-0" aria-hidden="true" />
+            </a>
           </div>
         </section>
 
