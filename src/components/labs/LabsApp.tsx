@@ -12,7 +12,7 @@ import {
 } from 'lucide-react';
 import { TechLogoRow, type TechKey } from './TechLogoRow';
 import { DotRevealHeadline, type DotRevealLineSpec } from './DotRevealHeadline';
-import { LabsScrollytelling } from './LabsScrollytelling';
+import { ScrollytellingBackground } from './ScrollytellingBackground';
 
 const LABS_HEADLINE_LINES: DotRevealLineSpec[] = [
   { text: 'ALICARI' },
@@ -191,55 +191,57 @@ export const LabsApp: React.FC = () => {
   }, [selectedSystem]);
 
   return (
-    <main className="min-h-screen bg-[#f6f6f6] text-[#010101] selection:bg-[#cc0000] selection:text-white overflow-x-clip">
-      {/* ── Editorial Header & Stipple-to-Solid DotReveal Headline ─────── */}
-      <header className="pt-14 sm:pt-20 pb-12 sm:pb-16 px-5 sm:px-8 lg:px-12 max-w-6xl mx-auto border-b border-[#e8e6e1]">
-        <div className="max-w-4xl">
-          <p className="inline-flex items-center gap-2 text-[11px] font-medium tracking-[0.16em] text-[#8a8a8a] uppercase mb-6">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#cc0000]" aria-hidden="true" />
-            <span>Alicari Labs · AI Developer · Diseño Multimedia & UX/UI</span>
-          </p>
+    <div className="relative min-h-screen text-[#010101] selection:bg-[#cc0000] selection:text-white overflow-x-clip">
+      {/* ── Fixed Scroll-Reactive Watermark Background (z-0) ───────────── */}
+      <ScrollytellingBackground />
 
-          <DotRevealHeadline
-            lines={LABS_HEADLINE_LINES}
-            accessibleHeading="Alicari Labs — Sistemas digitales diseñados y construidos de punta a punta."
-            className="mb-8"
-          />
+      {/* ── Foreground Editorial Content (relative z-10) ───────────────── */}
+      <main className="relative z-10">
+        {/* ── Editorial Header & Stipple-to-Solid DotReveal Headline ───── */}
+        <header className="pt-14 sm:pt-20 pb-12 sm:pb-16 px-5 sm:px-8 lg:px-12 max-w-6xl mx-auto border-b border-[#e8e6e1]/90">
+          <div className="max-w-4xl">
+            <p className="inline-flex items-center gap-2 text-[11px] font-medium tracking-[0.16em] text-[#666666] uppercase mb-6">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#cc0000]" aria-hidden="true" />
+              <span>Alicari Labs · AI Developer · Diseño Multimedia & UX/UI</span>
+            </p>
 
-          <p className="text-base sm:text-lg text-[#4a4a4a] font-light leading-relaxed max-w-3xl mb-8">
-            Alicari Labs reúne los sistemas propios que desarrollo como{' '}
-            <strong className="font-medium text-[#010101]">AI Developer</strong>, apalancados en mi
-            experiencia en{' '}
-            <strong className="font-medium text-[#010101]">Diseño Multimedia y UX/UI</strong>. Cada
-            plataforma nace de un problema operativo concreto y se resuelve combinando arquitectura
-            de producto, automatización e interfaces claras sin fricción.
-          </p>
+            <DotRevealHeadline
+              lines={LABS_HEADLINE_LINES}
+              accessibleHeading="Alicari Labs — Sistemas digitales diseñados y construidos de punta a punta."
+              className="mb-8"
+            />
 
-          <dl className="grid grid-cols-2 sm:grid-cols-4 gap-y-5 gap-x-6 pt-6 border-t border-[#e8e6e1]">
-            <div>
-              <dt className="text-[11px] uppercase tracking-[0.12em] text-[#8a8a8a] mb-1">Perfil</dt>
-              <dd className="text-sm font-medium text-[#010101] m-0">AI Developer + UX/UI</dd>
-            </div>
-            <div>
-              <dt className="text-[11px] uppercase tracking-[0.12em] text-[#8a8a8a] mb-1">Foco</dt>
-              <dd className="text-sm font-medium text-[#010101] m-0">Sistemas & Automatización</dd>
-            </div>
-            <div>
-              <dt className="text-[11px] uppercase tracking-[0.12em] text-[#8a8a8a] mb-1">Sistemas</dt>
-              <dd className="text-sm font-medium text-[#010101] m-0">3 plataformas activas</dd>
-            </div>
-            <div>
-              <dt className="text-[11px] uppercase tracking-[0.12em] text-[#8a8a8a] mb-1">Criterio</dt>
-              <dd className="text-sm font-medium text-[#010101] m-0">Producto & Usabilidad</dd>
-            </div>
-          </dl>
-        </div>
-      </header>
+            <p className="text-base sm:text-lg text-[#3a3a3a] font-light leading-relaxed max-w-3xl mb-8 bg-[#F6F6F6]/70 backdrop-blur-[2px] rounded-xl p-1 -m-1">
+              Alicari Labs reúne los sistemas propios que desarrollo como{' '}
+              <strong className="font-medium text-[#010101]">AI Developer</strong>, apalancados en mi
+              experiencia en{' '}
+              <strong className="font-medium text-[#010101]">Diseño Multimedia y UX/UI</strong>. Cada
+              plataforma nace de un problema operativo concreto y se resuelve combinando arquitectura
+              de producto, automatización e interfaces claras sin fricción.
+            </p>
 
-      {/* ── Scrollytelling: De la chispa al sistema (3 Etapas) ─────────── */}
-      <LabsScrollytelling />
+            <dl className="grid grid-cols-2 sm:grid-cols-4 gap-y-5 gap-x-6 pt-6 border-t border-[#e0ddd6]/90 bg-[#F6F6F6]/65 backdrop-blur-[2px] rounded-xl p-3 -mx-3">
+              <div>
+                <dt className="text-[11px] uppercase tracking-[0.12em] text-[#78756e] mb-1">Perfil</dt>
+                <dd className="text-sm font-medium text-[#010101] m-0">AI Developer + UX/UI</dd>
+              </div>
+              <div>
+                <dt className="text-[11px] uppercase tracking-[0.12em] text-[#78756e] mb-1">Foco</dt>
+                <dd className="text-sm font-medium text-[#010101] m-0">Sistemas & Automatización</dd>
+              </div>
+              <div>
+                <dt className="text-[11px] uppercase tracking-[0.12em] text-[#78756e] mb-1">Sistemas</dt>
+                <dd className="text-sm font-medium text-[#010101] m-0">3 plataformas activas</dd>
+              </div>
+              <div>
+                <dt className="text-[11px] uppercase tracking-[0.12em] text-[#78756e] mb-1">Criterio</dt>
+                <dd className="text-sm font-medium text-[#010101] m-0">Producto & Usabilidad</dd>
+              </div>
+            </dl>
+          </div>
+        </header>
 
-      {/* ── Systems Showcase ───────────────────────────────────────────── */}
+        {/* ── Systems Showcase ─────────────────────────────────────────── */}
       <section
         aria-label="Sistemas desarrollados en Alicari Labs"
         className="py-12 sm:py-16 px-5 sm:px-8 lg:px-12 max-w-6xl mx-auto"
@@ -262,7 +264,7 @@ export const LabsApp: React.FC = () => {
           {LAB_SYSTEMS.map((system) => (
             <article
               key={system.id}
-              className="bg-white rounded-xl border border-[#e8e6e1] p-6 sm:p-9 transition-all duration-300 hover:border-[#cfccc4] hover:shadow-[0_12px_36px_rgba(1,1,1,0.05)]"
+              className="bg-white/90 backdrop-blur-[2px] rounded-xl border border-[#e8e6e1] p-6 sm:p-9 transition-all duration-300 hover:border-[#cfccc4] hover:shadow-[0_12px_36px_rgba(1,1,1,0.05)]"
             >
               {/* Top Bar: Official Logo + Category + Index */}
               <div className="flex flex-wrap items-center justify-between gap-4 pb-6 mb-6 border-b border-[#efede8]">
@@ -538,6 +540,7 @@ export const LabsApp: React.FC = () => {
           </div>
         </div>
       )}
-    </main>
+      </main>
+    </div>
   );
 };
