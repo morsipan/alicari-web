@@ -14,93 +14,98 @@ export const LabsScrollBackground: React.FC = () => {
     ).matches;
 
     const ctx = gsap.context(() => {
-      // Estado inicial limpio: todo oculto excepto el bulbo wireframe
-      gsap.set('.stage-1-bulb', { opacity: 1, x: 0, y: 0, scale: 1 });
-      gsap.set('.stage-1-interference', { opacity: 0.75 });
-      gsap.set('.bulb-filament-red', { opacity: 0 });
-      gsap.set('.bulb-halo', { opacity: 0, scale: 0.7, transformOrigin: 'center' });
+      // Estado inicial (0% scroll): solo bulbo wireframe titilando e interferencia
+      gsap.set('.bulb-root', { opacity: 1, x: 0, y: 0, scale: 1 });
+      gsap.set('.bulb-flicker', { opacity: 0.72 });
+      gsap.set('.bulb-interference', { opacity: 0.85, x: 0 });
+      gsap.set('.bulb-filament-lit', { opacity: 0 });
+      gsap.set('.bulb-glow', { opacity: 0, scale: 0.65, transformOrigin: 'center' });
 
-      // Preparar trazos dibujables con strokeDasharray / strokeDashoffset
-      const drawableSelectors = [
-        '.stage-2-ray',
-        '.stage-2-connector',
-        '.stage-3-bridge',
-        '.stage-3-wireframe-stroke',
+      gsap.set('.modules-group', { opacity: 0, y: 18 });
+      gsap.set('.module-card', { opacity: 0, y: 14 });
+      gsap.set('.devices-group', { opacity: 0, y: 20 });
+      gsap.set('.device-screen-fill', { opacity: 0 });
+
+      // Preparar trazos vectoriales animados con strokeDasharray / strokeDashoffset
+      const pathSelectors = [
+        '.ray-line',
+        '.connector-path',
+        '.bridge-path',
+        '.wireframe-path',
       ];
 
-      drawableSelectors.forEach((selector) => {
-        const elements = gsap.utils.toArray<SVGGeometryElement>(selector);
-        elements.forEach((el) => {
+      pathSelectors.forEach((selector) => {
+        const els = gsap.utils.toArray<SVGGeometryElement>(selector);
+        els.forEach((el) => {
           const length =
-            typeof el.getTotalLength === 'function' ? el.getTotalLength() : 320;
+            typeof el.getTotalLength === 'function' ? el.getTotalLength() : 280;
           gsap.set(el, {
             strokeDasharray: length,
             strokeDashoffset: length,
-            opacity: 1,
           });
         });
       });
 
-      gsap.set('.stage-2-node', { opacity: 0, scale: 0, transformOrigin: 'center' });
-      gsap.set('.stage-2-module', { opacity: 0, y: 18 });
-      gsap.set('.stage-3-device-group', { opacity: 0, y: 20 });
-      gsap.set('.stage-3-ui-fill', { opacity: 0, scaleX: 0.85, transformOrigin: 'left center' });
-
-      // Si el usuario prefiere movimiento reducido, mostrar el estado final estático
       if (prefersReducedMotion) {
-        gsap.set('.stage-1-interference', { opacity: 0 });
-        gsap.set('.stage-1-bulb', { x: -240, y: -15, scale: 0.92 });
-        gsap.set('.bulb-filament-red', { opacity: 1 });
-        gsap.set('.bulb-halo', { opacity: 0.85, scale: 1 });
-        gsap.set('.stage-2-ray', { strokeDashoffset: 0 });
-        gsap.set('.stage-3-bridge, .stage-3-wireframe-stroke', { strokeDashoffset: 0 });
-        gsap.set('.stage-3-device-group, .stage-3-ui-fill', { opacity: 1, y: 0, scaleX: 1 });
+        gsap.set('.bulb-interference, .bulb-flicker', { opacity: 0 });
+        gsap.set('.bulb-root', { x: -250, y: -10, scale: 0.9 });
+        gsap.set('.bulb-filament-lit', { opacity: 1 });
+        gsap.set('.bulb-glow', { opacity: 0.9, scale: 1 });
+        gsap.set('.ray-line, .bridge-path, .wireframe-path', { strokeDashoffset: 0 });
+        gsap.set('.devices-group, .device-screen-fill', { opacity: 1, y: 0 });
         return;
       }
 
-      // Micro-interferencia ambiental continua mientras estamos en la Etapa 1
-      const interferenceTween = gsap.to('.stage-1-interference', {
-        x: 'random(-3, 3)',
-        opacity: 'random(0.2, 0.85)',
-        duration: 0.18,
+      // Titileo e interferencia continua en la etapa inicial (antes de estabilizarse con el scroll)
+      const flickerTween = gsap.to('.bulb-flicker', {
+        opacity: 'random(0.25, 1)',
+        duration: 0.14,
+        repeat: -1,
+        yoyo: true,
+        ease: 'steps(2)',
+      });
+
+      const interferenceTween = gsap.to('.bulb-interference', {
+        x: 'random(-4, 4)',
+        opacity: 'random(0.15, 0.9)',
+        duration: 0.16,
         repeat: -1,
         yoyo: true,
         ease: 'none',
       });
 
-      // Timeline maestro vinculado al scroll real de toda la página
+      // Timeline principal sincronizado al scroll de la página
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: document.documentElement,
           start: 'top top',
           end: 'bottom bottom',
-          scrub: 0.6,
+          scrub: 0.65,
           invalidateOnRefresh: true,
         },
       });
 
-      // =========================================================
-      // FASE 1 -> FASE 2 (0% a 50% del scroll):
-      // Se estabiliza el bulbo, sube, enciende en rojo y arma módulos
-      // =========================================================
+      // 1. Etapa 1 -> Etapa 2 (0% a 52%): se apaga interferencia, irradia rojo y arma módulos
       tl.to(
-        '.stage-1-interference',
+        ['.bulb-interference', '.bulb-flicker'],
         {
           opacity: 0,
-          duration: 0.12,
+          duration: 0.1,
           onComplete: () => {
+            flickerTween.pause();
             interferenceTween.pause();
           },
           onReverseComplete: () => {
+            flickerTween.play();
             interferenceTween.play();
           },
         },
-        0.05
+        0.04
       )
         .to(
-          '.stage-1-bulb',
+          '.bulb-root',
           {
-            y: -115,
+            y: -118,
             scale: 0.84,
             duration: 0.22,
             ease: 'power2.inOut',
@@ -108,34 +113,43 @@ export const LabsScrollBackground: React.FC = () => {
           0.08
         )
         .to(
-          '.bulb-filament-red',
+          '.bulb-filament-lit',
           {
             opacity: 1,
-            duration: 0.15,
+            duration: 0.14,
+          },
+          0.12
+        )
+        .to(
+          '.bulb-glow',
+          {
+            opacity: 0.85,
+            scale: 1,
+            duration: 0.18,
           },
           0.14
         )
         .to(
-          '.bulb-halo',
-          {
-            opacity: 0.8,
-            scale: 1,
-            duration: 0.2,
-          },
-          0.16
-        )
-        .to(
-          '.stage-2-ray',
+          '.ray-line',
           {
             strokeDashoffset: 0,
             duration: 0.18,
             stagger: 0.015,
             ease: 'power2.out',
           },
-          0.2
+          0.18
         )
         .to(
-          '.stage-2-connector',
+          '.modules-group',
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.12,
+          },
+          0.24
+        )
+        .to(
+          '.connector-path',
           {
             strokeDashoffset: 0,
             duration: 0.24,
@@ -145,86 +159,71 @@ export const LabsScrollBackground: React.FC = () => {
           0.26
         )
         .to(
-          '.stage-2-node',
-          {
-            opacity: 1,
-            scale: 1,
-            duration: 0.12,
-            stagger: 0.02,
-            ease: 'back.out(2)',
-          },
-          0.36
-        )
-        .to(
-          '.stage-2-module',
+          '.module-card',
           {
             opacity: 1,
             y: 0,
             duration: 0.2,
-            stagger: 0.03,
+            stagger: 0.035,
             ease: 'power2.out',
           },
-          0.4
+          0.34
         );
 
-      // =========================================================
-      // FASE 2 -> FASE 3 (55% a 100% del scroll):
-      // Módulos evolucionan a wireframes multidispositivo con lámpara encendida
-      // =========================================================
+      // 2. Etapa 2 -> Etapa 3 (55% a 100%): módulos pasan a prototipos multidevice con lámpara encendida
       tl.to(
-        ['.stage-2-connector', '.stage-2-node', '.stage-2-module'],
+        ['.modules-group', '.connector-path', '.module-card'],
         {
           opacity: 0,
-          y: -12,
+          y: -14,
           duration: 0.16,
           ease: 'power2.in',
         },
-        0.58
+        0.56
       )
         .to(
-          '.stage-1-bulb',
+          '.bulb-root',
           {
-            x: -245,
-            y: -10,
+            x: -250,
+            y: -12,
             scale: 0.9,
             duration: 0.24,
             ease: 'power2.inOut',
           },
-          0.62
+          0.6
         )
         .to(
-          '.stage-3-bridge',
+          '.bridge-path',
           {
             strokeDashoffset: 0,
             duration: 0.14,
             ease: 'power2.out',
           },
-          0.74
+          0.72
         )
         .to(
-          '.stage-3-device-group',
+          '.devices-group',
           {
             opacity: 1,
             y: 0,
             duration: 0.16,
           },
-          0.76
+          0.74
         )
         .to(
-          '.stage-3-wireframe-stroke',
+          '.wireframe-path',
           {
             strokeDashoffset: 0,
             duration: 0.22,
             stagger: 0.015,
             ease: 'power2.out',
           },
-          0.78
+          0.76
         )
         .to(
-          '.stage-3-ui-fill',
+          '.device-screen-fill',
           {
             opacity: 1,
-            scaleX: 1,
             duration: 0.18,
             stagger: 0.015,
             ease: 'power2.out',
@@ -247,118 +246,87 @@ export const LabsScrollBackground: React.FC = () => {
         viewBox="0 0 1100 650"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className="w-full max-w-[920px] h-auto opacity-30 sm:opacity-35 lg:opacity-45 select-none"
+        className="w-full max-w-[940px] h-auto opacity-30 sm:opacity-35 lg:opacity-45 select-none"
       >
         <defs>
-          <radialGradient id="alicariRedGlow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#CC0000" stopOpacity="0.24" />
+          <radialGradient id="labRedGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#CC0000" stopOpacity="0.25" />
             <stop offset="65%" stopColor="#CC0000" stopOpacity="0.06" />
             <stop offset="100%" stopColor="#CC0000" stopOpacity="0" />
           </radialGradient>
         </defs>
 
-        {/* ===================================================== */}
-        {/* GRUPO 1: BULBO CENTRAL (EVOLUCIONA EN LAS 3 ETAPAS)   */}
-        {/* ===================================================== */}
-        <g className="stage-1-bulb">
-          {/* Halo rojo cuando enciende */}
-          <circle cx="550" cy="295" r="155" fill="url(#alicariRedGlow)" className="bulb-halo" />
+        {/* ETAPA 1 -> 3: LAMPARITA CON TITILEO, RAYOS ROJOS E IRRADIACIÓN */}
+        <g className="bulb-root">
+          <circle cx="550" cy="295" r="155" fill="url(#labRedGlow)" className="bulb-glow" />
 
-          {/* Líneas de interferencia iniciales */}
-          <g className="stage-1-interference" strokeLinecap="round">
-            <line x1="390" y1="242" x2="465" y2="235" stroke="#1C1C1C" strokeWidth="1.3" />
-            <line x1="635" y1="228" x2="715" y2="220" stroke="#1C1C1C" strokeWidth="1.3" />
-            <line x1="382" y1="295" x2="450" y2="292" stroke="#1C1C1C" strokeWidth="1.3" />
-            <line x1="648" y1="308" x2="720" y2="303" stroke="#1C1C1C" strokeWidth="1.3" />
-            <line x1="408" y1="348" x2="478" y2="341" stroke="#1C1C1C" strokeWidth="1.3" />
+          {/* Interferencia inicial */}
+          <g className="bulb-interference" strokeLinecap="round">
+            <line x1="388" y1="242" x2="465" y2="234" stroke="#1C1C1C" strokeWidth="1.3" />
+            <line x1="635" y1="226" x2="716" y2="218" stroke="#1C1C1C" strokeWidth="1.3" />
+            <line x1="380" y1="295" x2="452" y2="291" stroke="#1C1C1C" strokeWidth="1.3" />
+            <line x1="648" y1="308" x2="722" y2="303" stroke="#1C1C1C" strokeWidth="1.3" />
+            <line x1="406" y1="350" x2="478" y2="342" stroke="#1C1C1C" strokeWidth="1.3" />
             <line x1="522" y1="264" x2="536" y2="252" stroke="#CC0000" strokeWidth="1.8" />
             <line x1="566" y1="252" x2="580" y2="263" stroke="#CC0000" strokeWidth="1.8" />
           </g>
 
-          {/* Rayos rojos (Etapa 2 y 3) */}
+          {/* Rayos rojos */}
           <g stroke="#CC0000" strokeWidth="2.5" strokeLinecap="round">
-            <line x1="550" y1="158" x2="550" y2="184" className="stage-2-ray" />
-            <line x1="482" y1="178" x2="496" y2="200" className="stage-2-ray" />
-            <line x1="618" y1="178" x2="604" y2="200" className="stage-2-ray" />
-            <line x1="436" y1="225" x2="458" y2="238" className="stage-2-ray" />
-            <line x1="664" y1="225" x2="642" y2="238" className="stage-2-ray" />
-            <line x1="420" y1="288" x2="446" y2="288" className="stage-2-ray" />
-            <line x1="680" y1="288" x2="654" y2="288" className="stage-2-ray" />
+            <line x1="550" y1="158" x2="550" y2="184" className="ray-line" />
+            <line x1="482" y1="178" x2="496" y2="200" className="ray-line" />
+            <line x1="618" y1="178" x2="604" y2="200" className="ray-line" />
+            <line x1="436" y1="225" x2="458" y2="238" className="ray-line" />
+            <line x1="664" y1="225" x2="642" y2="238" className="ray-line" />
+            <line x1="420" y1="288" x2="446" y2="288" className="ray-line" />
+            <line x1="680" y1="288" x2="654" y2="288" className="ray-line" />
           </g>
 
-          {/* Contorno del bulbo */}
+          {/* Bulbo */}
           <g stroke="#1C1C1C" strokeLinecap="round" strokeLinejoin="round">
             <path
               d="M550 205 C492 205 454 248 454 300 C454 337 476 363 493 386 C502 399 506 410 508 424 L592 424 C594 410 598 399 607 386 C624 363 646 337 646 300 C646 248 608 205 550 205 Z"
               strokeWidth="2.3"
               fill="#FFFFFF"
-              fillOpacity="0.65"
+              fillOpacity="0.68"
             />
-            {/* Trazo wireframe doble */}
-            <path
-              d="M547 209 C496 211 459 251 458 302 C458 336 480 361 496 384"
-              strokeWidth="1"
-              strokeOpacity="0.45"
-            />
-
-            {/* Filamento apagado (wireframe inicial) */}
-            <g strokeWidth="1.6" strokeOpacity="0.65">
+            <g className="bulb-flicker" strokeWidth="1.6">
               <path d="M532 422 L532 352 L520 314" />
               <path d="M568 422 L568 352 L580 314" />
               <path d="M520 314 Q528 302 536 314 Q544 326 550 314 Q558 302 566 314 L580 314" />
             </g>
-
-            {/* Filamento encendido en rojo Alicari */}
-            <g className="bulb-filament-red" stroke="#CC0000" strokeWidth="2.4">
+            <g className="bulb-filament-lit" stroke="#CC0000" strokeWidth="2.4">
               <path d="M532 422 L532 352 L520 314" />
               <path d="M568 422 L568 352 L580 314" />
               <path d="M520 314 Q528 302 536 314 Q544 326 550 314 Q558 302 566 314 L580 314" />
             </g>
-
-            {/* Casquillo */}
             <rect x="508" y="424" width="84" height="13" rx="3" strokeWidth="2" fill="#EAEAEA" />
             <rect x="512" y="437" width="76" height="13" rx="3" strokeWidth="2" fill="#EAEAEA" />
             <path d="M524 450 L576 450 L566 464 L534 464 Z" strokeWidth="2" fill="#1C1C1C" />
           </g>
         </g>
 
-        {/* ===================================================== */}
-        {/* GRUPO 2: CONECTORES Y MÓDULOS DE TRABAJO (ETAPA 2)    */}
-        {/* ===================================================== */}
-        <g>
-          {/* Conectores de ideas desde el bulbo elevado */}
+        {/* ETAPA 2: CONECTORES ROJOS Y MÓDULOS DE TRABAJO */}
+        <g className="modules-group">
           <g stroke="#CC0000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M538 355 L538 395 L260 395 L260 430" className="stage-2-connector" />
-            <path d="M450 395 L450 430" className="stage-2-connector" />
-            <path d="M562 355 L562 395 L840 395 L840 430" className="stage-2-connector" />
-            <path d="M650 395 L650 430" className="stage-2-connector" />
-            <line x1="345" y1="495" x2="375" y2="495" className="stage-2-connector" />
-            <line x1="535" y1="495" x2="565" y2="495" className="stage-2-connector" />
-            <line x1="725" y1="495" x2="755" y2="495" className="stage-2-connector" />
+            <path d="M538 355 L538 395 L260 395 L260 430" className="connector-path" />
+            <path d="M450 395 L450 430" className="connector-path" />
+            <path d="M562 355 L562 395 L840 395 L840 430" className="connector-path" />
+            <path d="M650 395 L650 430" className="connector-path" />
+            <line x1="345" y1="495" x2="375" y2="495" className="connector-path" />
+            <line x1="535" y1="495" x2="565" y2="495" className="connector-path" />
+            <line x1="725" y1="495" x2="755" y2="495" className="connector-path" />
           </g>
 
-          {/* Nodos rojos */}
-          <g fill="#CC0000">
-            <circle cx="260" cy="430" r="4.5" className="stage-2-node" />
-            <circle cx="450" cy="430" r="4.5" className="stage-2-node" />
-            <circle cx="650" cy="430" r="4.5" className="stage-2-node" />
-            <circle cx="840" cy="430" r="4.5" className="stage-2-node" />
-          </g>
-
-          {/* 4 Módulos de trabajo */}
           <g stroke="#1C1C1C" strokeWidth="1.8" fill="#FFFFFF">
-            {/* Módulo 1 */}
-            <g className="stage-2-module">
+            <g className="module-card">
               <rect x="185" y="430" width="160" height="135" rx="8" />
               <line x1="185" y1="456" x2="345" y2="456" strokeWidth="1.4" />
               <circle cx="201" cy="443" r="3" fill="#CC0000" stroke="none" />
               <rect x="203" y="472" width="124" height="38" rx="4" fill="#F6F6F6" strokeWidth="1.2" />
               <line x1="203" y1="526" x2="295" y2="526" strokeWidth="1.4" />
-              <line x1="203" y1="542" x2="270" y2="542" strokeWidth="1.4" strokeOpacity="0.45" />
             </g>
-
-            {/* Módulo 2 */}
-            <g className="stage-2-module">
+            <g className="module-card">
               <rect x="375" y="430" width="160" height="135" rx="8" />
               <line x1="375" y1="456" x2="535" y2="456" strokeWidth="1.4" />
               <circle cx="391" cy="443" r="3" fill="#CC0000" stroke="none" />
@@ -366,18 +334,14 @@ export const LabsScrollBackground: React.FC = () => {
               <rect x="461" y="472" width="56" height="38" rx="4" fill="#F6F6F6" strokeWidth="1.2" />
               <line x1="393" y1="526" x2="505" y2="526" strokeWidth="1.4" />
             </g>
-
-            {/* Módulo 3 */}
-            <g className="stage-2-module">
+            <g className="module-card">
               <rect x="565" y="430" width="160" height="135" rx="8" />
               <line x1="565" y1="456" x2="725" y2="456" strokeWidth="1.4" />
               <circle cx="581" cy="443" r="3" fill="#CC0000" stroke="none" />
               <circle cx="645" cy="492" r="20" fill="#F6F6F6" strokeWidth="1.2" />
               <line x1="583" y1="526" x2="695" y2="526" strokeWidth="1.4" />
             </g>
-
-            {/* Módulo 4 */}
-            <g className="stage-2-module">
+            <g className="module-card">
               <rect x="755" y="430" width="160" height="135" rx="8" />
               <line x1="755" y1="456" x2="915" y2="456" strokeWidth="1.4" />
               <circle cx="771" cy="443" r="3" fill="#CC0000" stroke="none" />
@@ -388,11 +352,8 @@ export const LabsScrollBackground: React.FC = () => {
           </g>
         </g>
 
-        {/* ===================================================== */}
-        {/* GRUPO 3: WIREFRAMES Y PROTOTIPO MULTIDEVICE (ETAPA 3) */}
-        {/* ===================================================== */}
+        {/* ETAPA 3: WIREFRAMES Y PROTOTIPOS MULTIDEVICE */}
         <g>
-          {/* Puente rojo entre lámpara encendida y dispositivos */}
           <line
             x1="415"
             y1="305"
@@ -400,11 +361,9 @@ export const LabsScrollBackground: React.FC = () => {
             y2="305"
             stroke="#CC0000"
             strokeWidth="2.2"
-            className="stage-3-bridge"
+            className="bridge-path"
           />
-
-          <g className="stage-3-device-group">
-            {/* Monitor Desktop Wireframe */}
+          <g className="devices-group">
             <rect
               x="480"
               y="165"
@@ -414,7 +373,7 @@ export const LabsScrollBackground: React.FC = () => {
               fill="#FFFFFF"
               stroke="#1C1C1C"
               strokeWidth="2.2"
-              className="stage-3-wireframe-stroke"
+              className="wireframe-path"
             />
             <line
               x1="480"
@@ -423,32 +382,15 @@ export const LabsScrollBackground: React.FC = () => {
               y2="196"
               stroke="#1C1C1C"
               strokeWidth="1.5"
-              className="stage-3-wireframe-stroke"
+              className="wireframe-path"
             />
-            <circle cx="500" cy="180" r="4" fill="#CC0000" className="stage-3-ui-fill" />
-            <circle cx="514" cy="180" r="4" fill="#1C1C1C" fillOpacity="0.25" className="stage-3-ui-fill" />
-            <circle cx="528" cy="180" r="4" fill="#1C1C1C" fillOpacity="0.25" className="stage-3-ui-fill" />
-
-            {/* Base Monitor */}
             <path
               d="M668 440 L732 440 L744 480 L656 480 Z"
               fill="#EAEAEA"
               stroke="#1C1C1C"
               strokeWidth="2"
-              className="stage-3-wireframe-stroke"
+              className="wireframe-path"
             />
-            <line
-              x1="630"
-              y1="480"
-              x2="770"
-              y2="480"
-              stroke="#1C1C1C"
-              strokeWidth="2.4"
-              strokeLinecap="round"
-              className="stage-3-wireframe-stroke"
-            />
-
-            {/* Retícula Wireframe Desktop */}
             <rect
               x="505"
               y="236"
@@ -458,7 +400,7 @@ export const LabsScrollBackground: React.FC = () => {
               fill="#F6F6F6"
               stroke="#1C1C1C"
               strokeWidth="1.2"
-              className="stage-3-wireframe-stroke"
+              className="wireframe-path"
             />
             <line
               x1="505"
@@ -468,25 +410,10 @@ export const LabsScrollBackground: React.FC = () => {
               stroke="#1C1C1C"
               strokeOpacity="0.22"
               strokeWidth="1"
-              className="stage-3-wireframe-stroke"
+              className="wireframe-path"
             />
-            <line
-              x1="720"
-              y1="236"
-              x2="505"
-              y2="326"
-              stroke="#1C1C1C"
-              strokeOpacity="0.22"
-              strokeWidth="1"
-              className="stage-3-wireframe-stroke"
-            />
-
-            <rect x="738" y="238" width="154" height="13" rx="3" fill="#1C1C1C" className="stage-3-ui-fill" />
-            <rect x="738" y="260" width="132" height="8" rx="2" fill="#1C1C1C" fillOpacity="0.35" className="stage-3-ui-fill" />
-            <rect x="738" y="276" width="114" height="8" rx="2" fill="#1C1C1C" fillOpacity="0.35" className="stage-3-ui-fill" />
-            <rect x="738" y="302" width="72" height="22" rx="4" fill="#CC0000" className="stage-3-ui-fill" />
-
-            {/* 3 Cards Wireframe inferiores */}
+            <rect x="738" y="238" width="154" height="13" rx="3" fill="#1C1C1C" className="device-screen-fill" />
+            <rect x="738" y="302" width="72" height="22" rx="4" fill="#CC0000" className="device-screen-fill" />
             <rect
               x="505"
               y="344"
@@ -496,7 +423,7 @@ export const LabsScrollBackground: React.FC = () => {
               fill="#F6F6F6"
               stroke="#1C1C1C"
               strokeWidth="1.2"
-              className="stage-3-wireframe-stroke"
+              className="wireframe-path"
             />
             <rect
               x="640"
@@ -507,7 +434,7 @@ export const LabsScrollBackground: React.FC = () => {
               fill="#F6F6F6"
               stroke="#1C1C1C"
               strokeWidth="1.2"
-              className="stage-3-wireframe-stroke"
+              className="wireframe-path"
             />
             <rect
               x="775"
@@ -518,10 +445,9 @@ export const LabsScrollBackground: React.FC = () => {
               fill="#F6F6F6"
               stroke="#1C1C1C"
               strokeWidth="1.2"
-              className="stage-3-wireframe-stroke"
+              className="wireframe-path"
             />
 
-            {/* Dispositivo Mobile superpuesto */}
             <rect
               x="885"
               y="265"
@@ -531,7 +457,7 @@ export const LabsScrollBackground: React.FC = () => {
               fill="#FFFFFF"
               stroke="#1C1C1C"
               strokeWidth="2.2"
-              className="stage-3-wireframe-stroke"
+              className="wireframe-path"
             />
             <rect
               x="900"
@@ -542,21 +468,10 @@ export const LabsScrollBackground: React.FC = () => {
               fill="#F6F6F6"
               stroke="#1C1C1C"
               strokeWidth="1.2"
-              className="stage-3-wireframe-stroke"
+              className="wireframe-path"
             />
-            <line
-              x1="900"
-              y1="308"
-              x2="996"
-              y2="366"
-              stroke="#1C1C1C"
-              strokeOpacity="0.22"
-              strokeWidth="1"
-              className="stage-3-wireframe-stroke"
-            />
-            <rect x="900" y="378" width="76" height="8" rx="2" fill="#1C1C1C" className="stage-3-ui-fill" />
-            <rect x="900" y="393" width="60" height="6" rx="2" fill="#1C1C1C" fillOpacity="0.35" className="stage-3-ui-fill" />
-            <rect x="900" y="410" width="48" height="16" rx="3" fill="#CC0000" className="stage-3-ui-fill" />
+            <rect x="900" y="378" width="76" height="8" rx="2" fill="#1C1C1C" className="device-screen-fill" />
+            <rect x="900" y="410" width="48" height="16" rx="3" fill="#CC0000" className="device-screen-fill" />
           </g>
         </g>
       </svg>
