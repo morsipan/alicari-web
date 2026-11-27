@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { TechLogoRow, type TechKey } from './TechLogoRow';
 import { DotRevealHeadline, type DotRevealLineSpec } from './DotRevealHeadline';
+import { LabsScrollytelling } from './LabsScrollytelling';
 
 const LABS_HEADLINE_LINES: DotRevealLineSpec[] = [
   { text: 'ALICARI' },
@@ -190,7 +191,7 @@ export const LabsApp: React.FC = () => {
   }, [selectedSystem]);
 
   return (
-    <main className="min-h-screen bg-[#f6f6f6] text-[#010101] selection:bg-[#cc0000] selection:text-white overflow-x-hidden">
+    <main className="min-h-screen bg-[#f6f6f6] text-[#010101] selection:bg-[#cc0000] selection:text-white overflow-x-clip">
       {/* ── Editorial Header & Stipple-to-Solid DotReveal Headline ─────── */}
       <header className="pt-14 sm:pt-20 pb-12 sm:pb-16 px-5 sm:px-8 lg:px-12 max-w-6xl mx-auto border-b border-[#e8e6e1]">
         <div className="max-w-4xl">
@@ -234,6 +235,9 @@ export const LabsApp: React.FC = () => {
           </dl>
         </div>
       </header>
+
+      {/* ── Scrollytelling: De la chispa al sistema (3 Etapas) ─────────── */}
+      <LabsScrollytelling />
 
       {/* ── Systems Showcase ───────────────────────────────────────────── */}
       <section

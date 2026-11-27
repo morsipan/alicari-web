@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" width="1200" height="675" fill="none">
+  <defs>
+    <radialGradient id="redGlow3" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#CC0000" stop-opacity="0.22"/>
+      <stop offset="65%" stop-color="#CC0000" stop-opacity="0.06"/>
+      <stop offset="100%" stop-color="#CC0000" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="675" fill="#F6F6F6"/>
+  <!-- Ambient crimson glow behind lit bulb -->
+  <circle cx="255" cy="310" r="175" fill="url(#redGlow3)"/>
+  <!-- Crimson rays -->
+  <g stroke="#CC0000" stroke-width="2.6" stroke-linecap="round">
+    <line x1="255" y1="185" x2="255" y2="212"/>
+    <line x1="185" y1="205" x2="199" y2="228"/>
+    <line x1="325" y1="205" x2="311" y2="228"/>
+    <line x1="138" y1="252" x2="161" y2="266"/>
+    <line x1="372" y1="252" x2="349" y2="266"/>
+    <line x1="122" y1="315" x2="148" y2="315"/>
+    <line x1="388" y1="315" x2="362" y2="315"/>
+    <line x1="140" y1="376" x2="163" y2="362"/>
+    <line x1="370" y1="376" x2="347" y2="362"/>
+  </g>
+  <!-- Solid lit bulb -->
+  <g stroke="#1C1C1C" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" fill="#FFFFFF">
+    <path d="M255 234 C208 234 176 270 176 315 C176 346 194 369 208 389 C216 400 220 410 221 422 L289 422 C290 410 294 400 302 389 C316 369 334 346 334 315 C334 270 302 234 255 234 Z"/>
+  </g>
+  <g stroke="#CC0000" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M239 422 L239 360 L228 326"/>
+    <path d="M271 422 L271 360 L282 326"/>
+    <path d="M228 326 Q237 313 246 326 Q255 339 264 326 Q273 313 282 326"/>
+  </g>
+  <g stroke="#1C1C1C" stroke-width="2.2" fill="#EAEAEA">
+    <rect x="221" y="422" width="68" height="12" rx="4"/>
+    <rect x="224" y="434" width="62" height="12" rx="4"/>
+    <path d="M235 446 L275 446 L266 460 L244 460 Z"/>
+  </g>
+  <!-- Energy bridge connecting bulb to multi-device mockup -->
+  <line x1="395" y1="315" x2="465" y2="315" stroke="#CC0000" stroke-width="2" stroke-dasharray="6 5"/>
+  <circle cx="465" cy="315" r="4.5" fill="#CC0000"/>
+  <!-- Flat Editorial Desktop Mockup -->
+  <g stroke="#1C1C1C" stroke-width="2.2" fill="#FFFFFF">
+    <!-- Outer monitor frame -->
+    <rect x="475" y="165" width="470" height="295" rx="12"/>
+    <!-- Browser top bar -->
+    <line x1="475" y1="197" x2="945" y2="197" stroke-width="1.6"/>
+    <circle cx="495" cy="181" r="4" fill="#CC0000" stroke="none"/>
+    <circle cx="509" cy="181" r="4" fill="#1C1C1C" fill-opacity="0.25" stroke="none"/>
+    <circle cx="523" cy="181" r="4" fill="#1C1C1C" fill-opacity="0.25" stroke="none"/>
+    <!-- Monitor stand -->
+    <path d="M675 460 L745 460 L758 502 L662 502 Z" fill="#EAEAEA"/>
+    <line x1="635" y1="502" x2="785" y2="502" stroke-width="2.6" stroke-linecap="round"/>
+  </g>
+  <!-- Desktop UI layout inside screen -->
+  <g>
+    <!-- Nav bar skeleton -->
+    <rect x="502" y="214" width="54" height="10" rx="3" fill="#1C1C1C"/>
+    <rect x="815" y="215" width="32" height="8" rx="2" fill="#1C1C1C" fill-opacity="0.3"/>
+    <rect x="857" y="215" width="32" height="8" rx="2" fill="#1C1C1C" fill-opacity="0.3"/>
+    <rect x="899" y="214" width="20" height="10" rx="3" fill="#CC0000"/>
+    <!-- Hero block -->
+    <rect x="502" y="242" width="235" height="96" rx="6" fill="#F6F6F6" stroke="#1C1C1C" stroke-width="1.2"/>
+    <rect x="753" y="242" width="166" height="14" rx="3" fill="#1C1C1C"/>
+    <rect x="753" y="266" width="142" height="9" rx="2" fill="#1C1C1C" fill-opacity="0.35"/>
+    <rect x="753" y="283" width="124" height="9" rx="2" fill="#1C1C1C" fill-opacity="0.35"/>
+    <rect x="753" y="310" width="76" height="24" rx="4" fill="#CC0000"/>
+    <!-- Three modular cards -->
+    <rect x="502" y="356" width="130" height="82" rx="6" fill="#F6F6F6" stroke="#1C1C1C" stroke-width="1.2"/>
+    <rect x="646" y="356" width="130" height="82" rx="6" fill="#F6F6F6" stroke="#1C1C1C" stroke-width="1.2"/>
+    <rect x="790" y="356" width="129" height="82" rx="6" fill="#F6F6F6" stroke="#1C1C1C" stroke-width="1.2"/>
+    <circle cx="520" cy="374" r="4" fill="#CC0000"/>
+    <circle cx="664" cy="374" r="4" fill="#CC0000"/>
+    <circle cx="808" cy="374" r="4" fill="#CC0000"/>
+  </g>
+  <!-- Flat Editorial Mobile Mockup overlapping bottom-right -->
+  <g stroke="#1C1C1C" stroke-width="2.2" fill="#FFFFFF">
+    <rect x="910" y="275" width="135" height="232" rx="18"/>
+    <!-- Speaker notch -->
+    <line x1="962" y1="289" x2="993" y2="289" stroke-width="2" stroke-linecap="round"/>
+  </g>
+  <!-- Mobile UI layout inside screen -->
+  <g>
+    <rect x="926" y="306" width="38" height="8" rx="2" fill="#1C1C1C"/>
+    <circle cx="1022" cy="310" r="4" fill="#CC0000"/>
+    <rect x="926" y="326" width="103" height="62" rx="5" fill="#F6F6F6" stroke="#1C1C1C" stroke-width="1.2"/>
+    <rect x="926" y="398" width="84" height="8" rx="2" fill="#1C1C1C"/>
+    <rect x="926" y="413" width="68" height="6" rx="2" fill="#1C1C1C" fill-opacity="0.35"/>
+    <rect x="926" y="430" width="52" height="16" rx="3" fill="#CC0000"/>
+    <rect x="926" y="456" width="48" height="34" rx="4" fill="#F6F6F6" stroke="#1C1C1C" stroke-width="1.2"/>
+    <rect x="981" y="456" width="48" height="34" rx="4" fill="#F6F6F6" stroke="#1C1C1C" stroke-width="1.2"/>
+  </g>
+</svg>

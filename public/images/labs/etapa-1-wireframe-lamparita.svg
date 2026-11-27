@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" width="1200" height="675" fill="none">
+  <rect width="1200" height="675" fill="#F6F6F6"/>
+  <!-- Subtle grid / editorial construction lines -->
+  <g stroke="#1C1C1C" stroke-opacity="0.12" stroke-width="1" stroke-dasharray="4 4">
+    <line x1="600" y1="90" x2="600" y2="585"/>
+    <line x1="360" y1="310" x2="840" y2="310"/>
+    <circle cx="600" cy="300" r="145"/>
+    <circle cx="600" cy="300" r="105"/>
+  </g>
+  <!-- Interference / glitch sketch lines -->
+  <g stroke="#1C1C1C" stroke-opacity="0.35" stroke-width="1.2">
+    <line x1="415" y1="242" x2="505" y2="234"/>
+    <line x1="695" y1="226" x2="788" y2="218"/>
+    <line x1="402" y1="295" x2="482" y2="291"/>
+    <line x1="712" y1="312" x2="795" y2="306"/>
+    <line x1="430" y1="354" x2="515" y2="346"/>
+    <line x1="680" y1="362" x2="765" y2="355"/>
+    <!-- Subtle red interference spark -->
+    <line x1="572" y1="268" x2="586" y2="256" stroke="#CC0000" stroke-width="1.5"/>
+    <line x1="618" y1="254" x2="632" y2="265" stroke="#CC0000" stroke-width="1.5"/>
+  </g>
+  <!-- Hand-drawn wireframe bulb outline -->
+  <g stroke="#1C1C1C" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Primary contour -->
+    <path d="M600 185 C532 185 488 236 488 298 C488 342 514 373 534 401 C545 416 550 430 552 446 L648 446 C650 430 655 416 666 401 C686 373 712 342 712 298 C712 236 668 185 600 185 Z" stroke-width="2.2"/>
+    <!-- Secondary sketchy double-stroke -->
+    <path d="M597 188 C536 190 493 239 492 300 C492 341 518 371 537 399 C547 414 553 428 555 444" stroke-width="1" stroke-opacity="0.55"/>
+    <path d="M604 187 C664 191 707 240 708 299 C708 341 682 371 663 399 C653 414 647 428 645 444" stroke-width="1" stroke-opacity="0.55"/>
+    <!-- Filament & internal supports (incomplete / intermittent) -->
+    <path d="M578 444 L578 362 L564 316" stroke-width="1.6"/>
+    <path d="M622 444 L622 362 L636 316" stroke-width="1.6"/>
+    <line x1="600" y1="444" x2="600" y2="350" stroke-width="1.4" stroke-dasharray="6 4"/>
+    <path d="M564 316 Q573 302 582 316 Q591 330 600 314" stroke-width="1.8"/>
+    <path d="M609 314 Q618 302 627 316 L636 316" stroke-width="1.8" stroke-dasharray="5 3"/>
+    <!-- Screw base wireframe -->
+    <rect x="552" y="446" width="96" height="16" rx="4" stroke-width="2"/>
+    <rect x="556" y="462" width="88" height="15" rx="4" stroke-width="2"/>
+    <rect x="560" y="477" width="80" height="15" rx="4" stroke-width="2"/>
+    <path d="M574 492 L626 492 L614 508 L586 508 Z" stroke-width="2"/>
+  </g>
+</svg>
