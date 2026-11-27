@@ -151,24 +151,26 @@ export const LabsScrollBackground: React.FC = () => {
           0.56
         );
 
-      // 0.68 -> 1.00 (~00:06.8 - 00:10.0): Líneas inferiores con nodos y acentos rojos finales
+      // 0.60 -> 0.90: Líneas inferiores con nodos y acentos rojos finales
       tl.to(
         q('.bottom-lines-stage'),
         { opacity: 1, duration: 0.08 },
-        0.68
+        0.62
       )
-        .to(q('.draw-bottom'), { opacity: 1, duration: 0.02, stagger: 0.015 }, 0.7)
+        .to(q('.draw-bottom'), { opacity: 1, duration: 0.02, stagger: 0.01 }, 0.64)
         .to(
           q('.draw-bottom'),
-          { strokeDashoffset: 0, duration: 0.28, stagger: 0.015 },
-          0.7
+          { strokeDashoffset: 0, duration: 0.2, stagger: 0.01 },
+          0.64
         );
 
+      // Completa el 100% del timeline al ~76% del scroll total para llegar 100% terminado antes del footer
       const st = ScrollTrigger.create({
         trigger: document.documentElement,
         start: 'top top',
-        end: 'bottom bottom',
-        scrub: 0.45,
+        end: () =>
+          '+=' + Math.max(400, Math.round((document.documentElement.scrollHeight - window.innerHeight) * 0.76)),
+        scrub: 0.25,
         animation: tl,
         invalidateOnRefresh: true,
       });
