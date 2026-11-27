@@ -18,17 +18,25 @@ export const LabsScrollBackground: React.FC = () => {
     const ctx = gsap.context(() => {
       const q = gsap.utils.selector(container);
 
-      gsap.set(q('.bulb-root'), { opacity: 1, x: 0, y: 0, scale: 1 });
+      // Estado inicial limpio (scroll = 0): solo bulbo wireframe visible
+      gsap.set(q('.bulb-root'), {
+        opacity: 1,
+        x: 0,
+        y: 0,
+        scale: 1,
+        svgOrigin: '550 295',
+      });
       gsap.set(q('.bulb-flicker'), { opacity: 0.75 });
-      gsap.set(q('.bulb-interference'), { opacity: 0.85, x: 0 });
+      gsap.set(q('.bulb-interference'), { opacity: prefersReducedMotion ? 0.35 : 0.85, x: 0 });
       gsap.set(q('.bulb-filament-lit'), { opacity: 0 });
-      gsap.set(q('.bulb-glow'), { opacity: 0, scale: 0.65, transformOrigin: 'center' });
+      gsap.set(q('.bulb-glow'), { opacity: 0, scale: 0.65, svgOrigin: '550 295' });
 
       gsap.set(q('.modules-group'), { opacity: 0, y: 16 });
       gsap.set(q('.module-card'), { opacity: 0, y: 14 });
       gsap.set(q('.devices-group'), { opacity: 0, y: 18 });
       gsap.set(q('.device-screen-fill'), { opacity: 0 });
 
+      // Preparar todos los trazos dibujables ocultos (opacity: 0 evita puntos de strokeLinecap="round")
       const strokeEls = gsap.utils.toArray<SVGGeometryElement>(
         q('.ray-line, .connector-path, .bridge-path, .wireframe-path')
       );
@@ -38,55 +46,51 @@ export const LabsScrollBackground: React.FC = () => {
         gsap.set(el, {
           strokeDasharray: len,
           strokeDashoffset: len,
+          opacity: 0,
         });
       });
 
-      if (prefersReducedMotion) {
-        gsap.set(q('.bulb-interference, .bulb-flicker'), { opacity: 0 });
-        gsap.set(q('.bulb-root'), { x: -250, y: -12, scale: 0.9 });
-        gsap.set(q('.bulb-filament-lit'), { opacity: 1 });
-        gsap.set(q('.bulb-glow'), { opacity: 0.9, scale: 1 });
-        gsap.set(q('.ray-line, .bridge-path, .wireframe-path'), {
-          strokeDashoffset: 0,
+      // Micro-interferencia ambiental solo si no hay prefers-reduced-motion
+      let flickerTween: gsap.core.Tween | null = null;
+      let interferenceTween: gsap.core.Tween | null = null;
+
+      if (!prefersReducedMotion) {
+        flickerTween = gsap.to(q('.bulb-flicker'), {
+          opacity: 'random(0.25, 1)',
+          duration: 0.14,
+          repeat: -1,
+          yoyo: true,
+          ease: 'steps(2)',
         });
-        gsap.set(q('.devices-group, .device-screen-fill'), { opacity: 1, y: 0 });
-        return;
+
+        interferenceTween = gsap.to(q('.bulb-interference'), {
+          x: 'random(-4, 4)',
+          opacity: 'random(0.15, 0.9)',
+          duration: 0.16,
+          repeat: -1,
+          yoyo: true,
+          ease: 'none',
+        });
       }
-
-      const flickerTween = gsap.to(q('.bulb-flicker'), {
-        opacity: 'random(0.25, 1)',
-        duration: 0.14,
-        repeat: -1,
-        yoyo: true,
-        ease: 'steps(2)',
-      });
-
-      const interferenceTween = gsap.to(q('.bulb-interference'), {
-        x: 'random(-4, 4)',
-        opacity: 'random(0.15, 0.9)',
-        duration: 0.16,
-        repeat: -1,
-        yoyo: true,
-        ease: 'none',
-      });
 
       const tl = gsap.timeline({
         paused: true,
         defaults: { ease: 'none' },
       });
 
+      // Fase 1 -> Fase 2 (0% a 50% del scroll)
       tl.to(
         q('.bulb-interference, .bulb-flicker'),
         {
           opacity: 0,
           duration: 0.08,
           onComplete: () => {
-            flickerTween.pause();
-            interferenceTween.pause();
+            flickerTween?.pause();
+            interferenceTween?.pause();
           },
           onReverseComplete: () => {
-            flickerTween.play();
-            interferenceTween.play();
+            flickerTween?.play();
+            interferenceTween?.play();
           },
         },
         0.02
@@ -94,8 +98,10 @@ export const LabsScrollBackground: React.FC = () => {
         .to(q('.bulb-root'), { y: -118, scale: 0.84, duration: 0.18 }, 0.05)
         .to(q('.bulb-filament-lit'), { opacity: 1, duration: 0.1 }, 0.08)
         .to(q('.bulb-glow'), { opacity: 0.85, scale: 1, duration: 0.14 }, 0.1)
+        .to(q('.ray-line'), { opacity: 1, duration: 0.02, stagger: 0.01 }, 0.12)
         .to(q('.ray-line'), { strokeDashoffset: 0, duration: 0.16, stagger: 0.01 }, 0.12)
         .to(q('.modules-group'), { opacity: 1, y: 0, duration: 0.08 }, 0.16)
+        .to(q('.connector-path'), { opacity: 1, duration: 0.02, stagger: 0.015 }, 0.18)
         .to(
           q('.connector-path'),
           { strokeDashoffset: 0, duration: 0.2, stagger: 0.015 },
@@ -103,14 +109,17 @@ export const LabsScrollBackground: React.FC = () => {
         )
         .to(q('.module-card'), { opacity: 1, y: 0, duration: 0.16, stagger: 0.02 }, 0.24);
 
+      // Fase 2 -> Fase 3 (50% a 100% del scroll)
       tl.to(
         q('.modules-group, .connector-path, .module-card'),
         { opacity: 0, y: -14, duration: 0.12 },
         0.5
       )
-        .to(q('.bulb-root'), { x: -250, y: -12, scale: 0.9, duration: 0.2 }, 0.54)
+        .to(q('.bulb-root'), { x: -245, y: -10, scale: 0.9, duration: 0.2 }, 0.54)
+        .to(q('.bridge-path'), { opacity: 1, duration: 0.02 }, 0.66)
         .to(q('.bridge-path'), { strokeDashoffset: 0, duration: 0.12 }, 0.66)
         .to(q('.devices-group'), { opacity: 1, y: 0, duration: 0.12 }, 0.68)
+        .to(q('.wireframe-path'), { opacity: 1, duration: 0.02, stagger: 0.01 }, 0.7)
         .to(
           q('.wireframe-path'),
           { strokeDashoffset: 0, duration: 0.2, stagger: 0.01 },
