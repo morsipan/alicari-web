@@ -15,9 +15,9 @@ import { DotRevealHeadline, type DotRevealLineSpec } from './DotRevealHeadline';
 import { LabsScrollBackground } from './LabsScrollBackground';
 
 const LABS_HEADLINE_LINES: DotRevealLineSpec[] = [
-  { text: 'ALICARI' },
-  { text: 'LABS.', accent: true },
-  { text: 'SISTEMAS.' },
+  { text: 'alicari' },
+  { text: 'labs.', accent: true },
+  { text: 'Desarrollos.' },
 ];
 
 export interface LabSystem {
@@ -31,6 +31,7 @@ export interface LabSystem {
   logoBg: 'dark' | 'light';
   logoHeight: string;
   category: string;
+  summaryPrefix: string;
   summary: string;
   problem: string;
   operationalFlow: string;
@@ -56,8 +57,9 @@ export const LAB_SYSTEMS: LabSystem[] = [
     logoBg: 'dark',
     logoHeight: '26px',
     category: 'Comercio Directo · Catálogo Web & Automatización',
+    summaryPrefix: 'Disponible en ',
     summary:
-      'Sistema web de pedidos concebido para comercios locales y gastronómicos que necesitan vender rápido desde el celular. El cliente arma su carrito visual con variantes y envía un pedido estructurado directo al WhatsApp del negocio, eliminando registros obligatorios, pasarelas lentas y comisiones por venta.',
+      ', es un sistema web de pedidos concebido para comercios locales y gastronómicos que necesitan vender rápido desde el celular. El cliente arma su carrito visual con variantes y envía un pedido estructurado directo al WhatsApp del negocio, eliminando registros obligatorios, pasarelas lentas y comisiones por venta.',
     problem:
       'Los e-commerce tradicionales imponen comisiones por transacción y checkouts con múltiples pasos que provocan abandonos masivos en compras cotidianas y locales.',
     operationalFlow:
@@ -98,8 +100,9 @@ export const LAB_SYSTEMS: LabSystem[] = [
     logoBg: 'light',
     logoHeight: '32px',
     category: 'Gestión de Agenda · Turnera Autogestionada',
+    summaryPrefix: 'Accesible en ',
     summary:
-      'Plataforma de reservas diseñada para profesionales independientes, consultorios, barberías y espacios de servicios. Permite autogestionar citas en dos pasos sin exigir tarjeta de crédito ni cuentas previas, sincronizando la agenda en tiempo real para evitar superposiciones.',
+      ', es una plataforma de reservas diseñada para profesionales independientes, consultorios, barberías y espacios de servicios. Permite autogestionar citas en dos pasos sin exigir tarjeta de crédito ni cuentas previas, sincronizando la agenda en tiempo real para evitar superposiciones.',
     problem:
       'Muchas turneras bloquean la reserva detrás de pasarelas de pago obligatorias o formularios extensos, generando fricción innecesaria con clientes habituales y pérdida de citas.',
     operationalFlow:
@@ -140,8 +143,9 @@ export const LAB_SYSTEMS: LabSystem[] = [
     logoBg: 'light',
     logoHeight: '28px',
     category: 'EdTech · Digitalización & Gestión Institucional',
+    summaryPrefix: 'Operativo en ',
     summary:
-      'Suite modular para instituciones educativas que reemplaza planillas impresas, carpetas físicas y carga manual por un circuito 100% digital. Unifica captación, carga documental, firma electrónica de familias y emisión automatizada de legajos estudiantiles.',
+      ', es una suite modular para instituciones educativas que reemplaza planillas impresas, carpetas físicas y carga manual por un circuito 100% digital. Unifica captación, carga documental, firma electrónica de familias y emisión automatizada de legajos estudiantiles.',
     problem:
       'Las secretarías escolares enfrentan cada ciclo lectivo cuellos de botella por formularios manuscritos, documentación extraviada y semanas de transcripción manual.',
     operationalFlow:
@@ -198,21 +202,24 @@ export const LabsApp: React.FC = () => {
       {/* ── Foreground Editorial Content (relative z-10) ───────────────── */}
       <main className="relative z-10">
         {/* ── Editorial Header & Stipple-to-Solid DotReveal Headline ───── */}
-        <header className="pt-16 pb-24 md:pt-24 md:pb-36 px-5 sm:px-8 lg:px-12 max-w-7xl mx-auto">
+        <header className="pt-16 pb-28 md:pt-24 md:pb-36 px-5 sm:px-8 lg:px-12 max-w-7xl mx-auto">
           <div className="max-w-2xl lg:max-w-[640px]">
-            <p className="inline-flex items-center gap-2 text-[11px] font-medium tracking-[0.16em] text-[#666666] uppercase mb-6">
+            <p className="inline-flex items-center gap-2 text-[11px] font-medium tracking-[0.16em] text-[#666666] mb-6">
               <span className="w-1.5 h-1.5 rounded-full bg-[#cc0000]" aria-hidden="true" />
-              <span>Alicari Labs · AI Developer · Diseño Multimedia & UX/UI</span>
+              <span>
+                <span className="lowercase">alicari labs</span>
+                <span className="uppercase"> · AI Developer · Diseño Multimedia & UX/UI</span>
+              </span>
             </p>
 
             <DotRevealHeadline
               lines={LABS_HEADLINE_LINES}
-              accessibleHeading="Alicari Labs — Sistemas digitales diseñados y construidos de punta a punta."
+              accessibleHeading="alicari labs — Desarrollos digitales diseñados y construidos de punta a punta."
               className="mb-8"
             />
 
             <p className="text-base sm:text-lg text-[#3a3a3a] font-light leading-relaxed mb-8 bg-[#F6F6F6]/80 backdrop-blur-[2px] rounded-xl p-3 -mx-3">
-              Alicari Labs reúne los sistemas propios que desarrollo como{' '}
+              alicari labs reúne los desarrollos propios que construyo como{' '}
               <strong className="font-medium text-[#010101]">AI Developer</strong>, apalancados en mi
               experiencia en{' '}
               <strong className="font-medium text-[#010101]">Diseño Multimedia y UX/UI</strong>. Cada
@@ -227,10 +234,10 @@ export const LabsApp: React.FC = () => {
               </div>
               <div>
                 <dt className="text-[10px] uppercase tracking-[0.12em] text-[#78756e] mb-1">Foco</dt>
-                <dd className="text-xs sm:text-sm font-medium text-[#010101] m-0">Sistemas & IA</dd>
+                <dd className="text-xs sm:text-sm font-medium text-[#010101] m-0">Desarrollos & IA</dd>
               </div>
               <div>
-                <dt className="text-[10px] uppercase tracking-[0.12em] text-[#78756e] mb-1">Sistemas</dt>
+                <dt className="text-[10px] uppercase tracking-[0.12em] text-[#78756e] mb-1">Desarrollos</dt>
                 <dd className="text-xs sm:text-sm font-medium text-[#010101] m-0">3 en producción</dd>
               </div>
               <div>
@@ -243,22 +250,22 @@ export const LabsApp: React.FC = () => {
 
         {/* ── Systems Showcase (Airy Left-Anchored Editorial Runway) ───── */}
         <section
-          aria-label="Sistemas desarrollados en Alicari Labs"
-          className="py-20 md:py-32 px-5 sm:px-8 lg:px-12 max-w-7xl mx-auto"
+          aria-label="Desarrollos en alicari labs"
+          className="py-24 md:py-32 px-5 sm:px-8 lg:px-12 max-w-7xl mx-auto"
         >
-          <div className="max-w-xl lg:max-w-[580px] mb-16 md:mb-24 bg-[#F6F6F6]/80 backdrop-blur-[2px] rounded-xl p-3 -mx-3">
+          <div className="max-w-xl lg:max-w-[580px] mb-20 md:mb-24 bg-[#F6F6F6]/80 backdrop-blur-[2px] rounded-xl p-3 -mx-3">
             <p className="text-[11px] uppercase tracking-[0.16em] text-[#8a8a8a] m-0 mb-2">
-              01 — 03 · Sistemas Operativos
+              01 — 03 · Desarrollos Propios
             </p>
             <h2 className="text-2xl sm:text-3xl font-medium tracking-[-0.02em] text-[#010101] m-0">
-              Sistemas en Alicari Labs
+              Desarrollos en alicari labs
             </h2>
             <p className="text-sm text-[#555555] font-light mt-2 m-0 leading-relaxed">
               Arquitectura, flujos operativos, automatización y experiencia de usuario aplicada a problemas reales.
             </p>
           </div>
 
-          <div className="space-y-24 md:space-y-40 max-w-xl lg:max-w-[580px]">
+          <div className="space-y-28 md:space-y-40 max-w-xl lg:max-w-[580px]">
             {LAB_SYSTEMS.map((system) => (
               <article
                 key={system.id}
@@ -303,6 +310,15 @@ export const LabsApp: React.FC = () => {
                 </p>
 
                 <p className="text-sm text-[#4a4a4a] font-light leading-relaxed m-0 mb-5">
+                  {system.summaryPrefix}
+                  <a
+                    href={system.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-mono text-[13px] font-medium text-[#1C1C1C] underline decoration-[#cc0000]/60 underline-offset-2 hover:text-[#cc0000] transition-colors"
+                  >
+                    {system.domain}
+                  </a>
                   {system.summary}
                 </p>
 
@@ -335,9 +351,9 @@ export const LabsApp: React.FC = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex-1 min-h-[44px] px-4 py-2.5 rounded-lg bg-[#010101] hover:bg-[#cc0000] text-white text-xs font-medium tracking-[0.1em] uppercase transition-colors flex items-center justify-center gap-2 no-underline focus:outline-none focus:ring-2 focus:ring-[#cc0000] focus:ring-offset-2"
-                    aria-label={`Abrir sitio oficial de ${system.name} en una nueva pestaña`}
+                    aria-label={`Visitar proyecto ${system.name} (${system.domain}) en una nueva pestaña`}
                   >
-                    <span>{system.domain}</span>
+                    <span>Visitar proyecto</span>
                     <ArrowUpRight className="w-4 h-4 shrink-0" aria-hidden="true" />
                   </a>
 
@@ -358,7 +374,7 @@ export const LabsApp: React.FC = () => {
         {/* ── Closing Lead-Conversion Section (Left-Anchored Asymmetry) ── */}
         <section
           aria-labelledby="labs-closing-heading"
-          className="mt-28 md:mt-40 py-24 md:py-36 px-5 sm:px-8 lg:px-12 max-w-7xl mx-auto"
+          className="mt-28 md:mt-40 py-24 pb-28 md:py-36 px-5 sm:px-8 lg:px-12 max-w-7xl mx-auto"
         >
           <div className="max-w-xl bg-[#F6F6F6]/85 backdrop-blur-[2px] border-t border-[#dedbd3] pt-8 sm:pt-10 pb-4 pr-2 sm:pr-6">
             <p className="inline-flex items-center gap-2 font-mono text-[11px] font-medium tracking-[0.14em] text-[#78756e] uppercase m-0 mb-4">
@@ -542,8 +558,9 @@ export const LabsApp: React.FC = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-full sm:w-auto min-h-[44px] px-6 py-2 rounded-lg bg-[#010101] hover:bg-[#cc0000] text-white text-xs font-medium uppercase tracking-[0.1em] no-underline transition-colors flex items-center justify-center gap-2"
+                aria-label={`Visitar proyecto ${selectedSystem.name} (${selectedSystem.domain})`}
               >
-                <span>Ir a {selectedSystem.domain}</span>
+                <span>Visitar proyecto</span>
                 <ArrowUpRight className="w-4 h-4" aria-hidden="true" />
               </a>
             </div>

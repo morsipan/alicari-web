@@ -602,7 +602,7 @@ export const DotRevealHeadline: React.FC<DotRevealHeadlineProps> = ({
                   ghostSpanRefs.current[idx] = el;
                 }}
                 aria-hidden="true"
-                className={`pointer-events-none select-none absolute inset-0 font-anton uppercase tracking-[0.01em] whitespace-nowrap ${
+                className={`pointer-events-none select-none absolute inset-0 font-anton tracking-[0.01em] whitespace-nowrap ${
                   line.accent ? 'text-[#cc0000]' : 'text-[#010101]'
                 }`}
                 style={{
@@ -620,7 +620,7 @@ export const DotRevealHeadline: React.FC<DotRevealHeadlineProps> = ({
                   liveSpanRefs.current[idx] = el;
                 }}
                 aria-hidden="true"
-                className={`relative block font-anton uppercase tracking-[0.01em] whitespace-nowrap select-text ${
+                className={`relative block font-anton tracking-[0.01em] whitespace-nowrap select-text ${
                   line.accent ? 'text-[#cc0000]' : 'text-[#010101]'
                 }`}
                 style={{

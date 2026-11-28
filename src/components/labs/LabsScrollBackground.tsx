@@ -1,11 +1,61 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
+const STAGE_LABELS = [
+  'Etapa 01 de 03: idea wireframe',
+  'Etapa 02 de 03: rayos rojos y módulos conectados',
+  'Etapa 03 de 03: lámpara encendida y prototipos multidispositivo',
+] as const;
+
 export const LabsScrollBackground: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const tlRef = useRef<gsap.core.Timeline | null>(null);
+  const flickerRef = useRef<gsap.core.Tween | null>(null);
+  const stageTargetsRef = useRef<[number, number, number]>([0, 0.45, 1]);
+  const manualOverrideRef = useRef(false);
+  const lastManualScrollYRef = useRef(0);
+  const prefersReducedMotionRef = useRef(false);
+
+  const [activeStage, setActiveStage] = useState<0 | 1 | 2>(0);
+
+  const syncFlicker = useCallback((progress: number) => {
+    const flicker = flickerRef.current;
+    if (!flicker) return;
+    if (progress > 0.06) {
+      flicker.pause();
+    } else {
+      flicker.play();
+    }
+  }, []);
+
+  const goToStage = useCallback(
+    (nextStage: 0 | 1 | 2) => {
+      const tl = tlRef.current;
+      if (!tl) return;
+      manualOverrideRef.current = true;
+      lastManualScrollYRef.current = window.scrollY;
+      setActiveStage(nextStage);
+
+      const targetProgress = stageTargetsRef.current[nextStage];
+      if (prefersReducedMotionRef.current) {
+        tl.progress(targetProgress);
+        syncFlicker(targetProgress);
+      } else {
+        gsap.to(tl, {
+          progress: targetProgress,
+          duration: 0.65,
+          ease: 'power2.inOut',
+          overwrite: 'auto',
+          onUpdate: () => syncFlicker(tl.progress()),
+        });
+      }
+    },
+    [syncFlicker]
+  );
 
   useEffect(() => {
     const container = containerRef.current;
@@ -14,6 +64,7 @@ export const LabsScrollBackground: React.FC = () => {
     const prefersReducedMotion = window.matchMedia(
       '(prefers-reduced-motion: reduce)'
     ).matches;
+    prefersReducedMotionRef.current = prefersReducedMotion;
 
     const ctx = gsap.context(() => {
       const q = gsap.utils.selector(container);
@@ -61,14 +112,16 @@ export const LabsScrollBackground: React.FC = () => {
           ease: 'steps(2)',
         });
       }
+      flickerRef.current = flickerTween;
 
-      // Timeline maestro mapeado a los beats del video de 10s sobre el scroll (0.0 -> 1.0)
+      // Timeline maestro mapeado a los beats del recorrido (0.0 -> 1.0)
       const tl = gsap.timeline({
         paused: true,
         defaults: { ease: 'none' },
       });
+      tlRef.current = tl;
 
-      // 0.00 -> 0.14 (~00:00 - 00:01.4): Se atenúan guías, se enciende el bulbo en rojo y nacen rayos
+      // 0.00 -> 0.14: Se atenúan guías, se enciende el bulbo en rojo y nacen rayos
       tl.to(
         q('.blueprint-guides'),
         { opacity: 0.12, duration: 0.1 },
@@ -105,7 +158,7 @@ export const LabsScrollBackground: React.FC = () => {
           0.08
         );
 
-      // 0.16 -> 0.42 (~00:01.6 - 00:04.2): Bulbo se mueve a la izquierda, surgen módulos wireframe y conectores
+      // 0.16 -> 0.42: Bulbo se mueve a la izquierda, surgen módulos wireframe y conectores
       tl.to(
         q('.bulb-assembly'),
         { x: -245, scale: 0.96, duration: 0.2, ease: 'power2.inOut' },
@@ -123,7 +176,7 @@ export const LabsScrollBackground: React.FC = () => {
           0.22
         );
 
-      // 0.42 -> 0.68 (~00:04.2 - 00:06.8): Barrido de transición y consolidación en Desktop + Mobile wireframes
+      // 0.42 -> 0.68: Barrido de transición y consolidación en Desktop + Mobile wireframes
       tl.to(
         q('.sweep-trails'),
         { opacity: 0.85, duration: 0.08 },
@@ -170,15 +223,46 @@ export const LabsScrollBackground: React.FC = () => {
           0.64
         );
 
-      // Completa el 100% del timeline al ~76% del scroll total para llegar 100% terminado antes del footer
+      const totalDur = tl.duration() || 1;
+      stageTargetsRef.current = [0, Math.min(0.43 / totalDur, 0.48), 1];
+
+      // Completa el 100% del timeline al ~76% del scroll total y convive sin conflictos con las flechas mobile
       const st = ScrollTrigger.create({
         trigger: document.documentElement,
         start: 'top top',
         end: () =>
-          '+=' + Math.max(400, Math.round((document.documentElement.scrollHeight - window.innerHeight) * 0.76)),
-        scrub: 0.25,
-        animation: tl,
+          '+=' +
+          Math.max(
+            400,
+            Math.round((document.documentElement.scrollHeight - window.innerHeight) * 0.76)
+          ),
         invalidateOnRefresh: true,
+        onUpdate: (self) => {
+          if (manualOverrideRef.current) {
+            if (Math.abs(window.scrollY - lastManualScrollYRef.current) > 90) {
+              manualOverrideRef.current = false;
+            } else {
+              return;
+            }
+          }
+
+          if (prefersReducedMotion) {
+            tl.progress(self.progress);
+          } else {
+            gsap.to(tl, {
+              progress: self.progress,
+              duration: 0.25,
+              ease: 'power1.out',
+              overwrite: 'auto',
+            });
+          }
+
+          syncFlicker(self.progress);
+
+          const nextStage: 0 | 1 | 2 =
+            self.progress < 0.22 ? 0 : self.progress < 0.72 ? 1 : 2;
+          setActiveStage((prev) => (prev === nextStage ? prev : nextStage));
+        },
       });
 
       const resizeObserver = new ResizeObserver(() => {
@@ -198,24 +282,27 @@ export const LabsScrollBackground: React.FC = () => {
         window.removeEventListener('load', onLoadRefresh);
         resizeObserver.disconnect();
         st.kill();
+        tlRef.current = null;
+        flickerRef.current = null;
       };
     }, container);
 
     return () => ctx.revert();
-  }, []);
+  }, [syncFlicker]);
 
   return (
-    <div
-      ref={containerRef}
-      aria-hidden="true"
-      className="fixed inset-0 pointer-events-none z-0 overflow-hidden bg-[#F6F6F6] flex items-center justify-center lg:justify-end lg:pr-4 xl:pr-8"
-    >
-      <svg
-        viewBox="0 0 1280 720"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        className="w-full max-w-[920px] xl:max-w-[1040px] h-auto opacity-30 sm:opacity-35 lg:opacity-45 select-none"
+    <>
+      <div
+        ref={containerRef}
+        aria-hidden="true"
+        className="fixed inset-0 pointer-events-none z-0 overflow-hidden bg-[#F6F6F6] flex items-center justify-center lg:justify-end lg:pr-4 xl:pr-8"
       >
+        <svg
+          viewBox="0 0 1280 720"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          className="w-[115%] max-w-none sm:w-full sm:max-w-[920px] xl:max-w-[1040px] h-auto opacity-35 sm:opacity-35 lg:opacity-45 select-none"
+        >
         <defs>
           <radialGradient id="videoBulbGlow" cx="50%" cy="50%" r="50%">
             <stop offset="0%" stopColor="#CC0000" stopOpacity="0.28" />
@@ -511,6 +598,56 @@ export const LabsScrollBackground: React.FC = () => {
           </g>
         </g>
       </svg>
-    </div>
+      </div>
+
+      {/* Control discreto paso a paso para mobile (< 768px) */}
+      <div
+        role="region"
+        aria-label="Control paso a paso de la animación de fondo"
+        className="fixed bottom-4 left-1/2 -translate-x-1/2 z-30 md:hidden flex items-center gap-1.5 rounded-full bg-[#F6F6F6]/92 backdrop-blur-md border border-[#dedbd3] px-1.5 py-1 shadow-[0_8px_28px_rgba(1,1,1,0.08)]"
+      >
+        <button
+          type="button"
+          onClick={() => goToStage(Math.max(0, activeStage - 1) as 0 | 1 | 2)}
+          disabled={activeStage === 0}
+          aria-label="Etapa anterior de la animación"
+          className="min-w-[44px] min-h-[44px] rounded-full flex items-center justify-center bg-transparent hover:bg-white active:bg-[#eceae4] text-[#1C1C1C] disabled:opacity-35 disabled:cursor-not-allowed border-0 cursor-pointer transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#CC0000]"
+        >
+          <ArrowLeft className="w-4 h-4" aria-hidden="true" />
+        </button>
+
+        <div
+          className="flex flex-col items-center justify-center px-2 select-none"
+          aria-live="polite"
+        >
+          <span className="font-mono text-[11px] font-medium tracking-[0.14em] text-[#1C1C1C] tabular-nums leading-none">
+            0{activeStage + 1} / 03
+          </span>
+          <span className="sr-only">{STAGE_LABELS[activeStage]}</span>
+          <div className="flex items-center gap-1.5 mt-1.5" aria-hidden="true">
+            {[0, 1, 2].map((idx) => (
+              <span
+                key={idx}
+                className={`h-1.5 rounded-full transition-all duration-300 ${
+                  activeStage === idx
+                    ? 'w-3.5 bg-[#CC0000]'
+                    : 'w-1.5 bg-[#cfccc4]'
+                }`}
+              />
+            ))}
+          </div>
+        </div>
+
+        <button
+          type="button"
+          onClick={() => goToStage(Math.min(2, activeStage + 1) as 0 | 1 | 2)}
+          disabled={activeStage === 2}
+          aria-label="Etapa siguiente de la animación"
+          className="min-w-[44px] min-h-[44px] rounded-full flex items-center justify-center bg-transparent hover:bg-white active:bg-[#eceae4] text-[#1C1C1C] disabled:opacity-35 disabled:cursor-not-allowed border-0 cursor-pointer transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#CC0000]"
+        >
+          <ArrowRight className="w-4 h-4" aria-hidden="true" />
+        </button>
+      </div>
+    </>
   );
 };
