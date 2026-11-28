@@ -82,13 +82,18 @@ export const LabsScrollBackground: React.FC = () => {
       gsap.set(q('.filament-lit, .bulb-red-tint, .bulb-halo'), { opacity: 0 });
       gsap.set(q('.bulb-halo'), { scale: 0.7, svgOrigin: '640 345' });
 
+      gsap.set(q('.inline-vector-stage'), { opacity: 1 });
       gsap.set(q('.modules-stage'), { opacity: 0, x: 18 });
-      gsap.set(q('.devices-stage'), { opacity: 0, x: 24 });
       gsap.set(q('.sweep-trails'), { opacity: 0 });
-      gsap.set(q('.bottom-lines-stage'), { opacity: 0 });
+      gsap.set(q('.final-hd-stage'), {
+        opacity: 0,
+        scale: 0.96,
+        y: 12,
+        transformOrigin: '50% 50%',
+      });
 
       const drawables = gsap.utils.toArray<SVGGeometryElement>(
-        q('.draw-ray, .draw-mod-line, .draw-dev-line, .draw-trail, .draw-bottom')
+        q('.draw-ray, .draw-mod-line, .draw-trail')
       );
       drawables.forEach((el) => {
         const len =
@@ -114,14 +119,14 @@ export const LabsScrollBackground: React.FC = () => {
       }
       flickerRef.current = flickerTween;
 
-      // Timeline maestro mapeado a los beats del recorrido (0.0 -> 1.0)
+      // Timeline maestro mapeado al recorrido completo (0.0 -> 1.0)
       const tl = gsap.timeline({
         paused: true,
         defaults: { ease: 'none' },
       });
       tlRef.current = tl;
 
-      // 0.00 -> 0.14: Se atenúan guías, se enciende el bulbo en rojo y nacen rayos
+      // Etapa 1 (0.00 -> 0.18): Se atenúan guías, se enciende el bulbo en rojo y nacen rayos
       tl.to(
         q('.blueprint-guides'),
         { opacity: 0.12, duration: 0.1 },
@@ -158,75 +163,72 @@ export const LabsScrollBackground: React.FC = () => {
           0.08
         );
 
-      // 0.16 -> 0.42: Bulbo se mueve a la izquierda, surgen módulos wireframe y conectores
+      // Etapa 2 (0.18 -> 0.56): Bulbo se mueve a la izquierda, surgen módulos wireframe y conectores
       tl.to(
         q('.bulb-assembly'),
         { x: -245, scale: 0.96, duration: 0.2, ease: 'power2.inOut' },
-        0.16
+        0.18
       )
         .to(
           q('.modules-stage'),
           { opacity: 1, x: 0, duration: 0.12 },
-          0.2
+          0.24
         )
-        .to(q('.draw-mod-line'), { opacity: 1, duration: 0.02, stagger: 0.012 }, 0.22)
+        .to(q('.draw-mod-line'), { opacity: 1, duration: 0.02, stagger: 0.012 }, 0.26)
         .to(
           q('.draw-mod-line'),
           { strokeDashoffset: 0, duration: 0.22, stagger: 0.012 },
-          0.22
+          0.26
         );
 
-      // 0.42 -> 0.68: Barrido de transición y consolidación en Desktop + Mobile wireframes
+      // Etapa 3 (0.60 -> 1.00): Barrido, atenuación de módulos intermedios y revelado progresivo del cierre HD
       tl.to(
         q('.sweep-trails'),
         { opacity: 0.85, duration: 0.08 },
-        0.42
+        0.6
       )
-        .to(q('.draw-trail'), { opacity: 1, duration: 0.02, stagger: 0.01 }, 0.43)
+        .to(q('.draw-trail'), { opacity: 1, duration: 0.02, stagger: 0.01 }, 0.61)
         .to(
           q('.draw-trail'),
           { strokeDashoffset: 0, duration: 0.14, stagger: 0.01 },
-          0.43
+          0.61
         )
         .to(
           q('.modules-stage'),
-          { opacity: 0, x: -16, duration: 0.14 },
-          0.46
+          { opacity: 0, x: -16, duration: 0.18 },
+          0.65
         )
         .to(
-          q('.devices-stage'),
-          { opacity: 1, x: 0, duration: 0.14 },
-          0.48
+          q('.final-hd-stage'),
+          { opacity: 1, scale: 1, y: 0, duration: 0.3, ease: 'power2.out' },
+          0.66
         )
-        .to(q('.draw-dev-line'), { opacity: 1, duration: 0.02, stagger: 0.01 }, 0.49)
         .to(
-          q('.draw-dev-line'),
-          { strokeDashoffset: 0, duration: 0.2, stagger: 0.01 },
-          0.49
+          q('.inline-vector-stage'),
+          { opacity: 0, duration: 0.22 },
+          0.72
         )
         .to(
           q('.sweep-trails'),
           { opacity: 0, duration: 0.12 },
-          0.56
-        );
-
-      // 0.60 -> 0.90: Líneas inferiores con nodos y acentos rojos finales
-      tl.to(
-        q('.bottom-lines-stage'),
-        { opacity: 1, duration: 0.08 },
-        0.62
-      )
-        .to(q('.draw-bottom'), { opacity: 1, duration: 0.02, stagger: 0.01 }, 0.64)
-        .to(
-          q('.draw-bottom'),
-          { strokeDashoffset: 0, duration: 0.2, stagger: 0.01 },
-          0.64
-        );
+          0.74
+        )
+        .to({}, { duration: 0.04 }, 0.96);
 
       const totalDur = tl.duration() || 1;
-      stageTargetsRef.current = [0, Math.min(0.43 / totalDur, 0.48), 1];
+      stageTargetsRef.current = [0, Math.min(0.54 / totalDur, 0.56), 1];
 
-      // Completa el 100% del timeline al ~76% del scroll total y convive sin conflictos con las flechas mobile
+      // Si el usuario prefiere movimiento reducido, mostrar el estado final estático sin animaciones continuas
+      if (prefersReducedMotion) {
+        tl.progress(1);
+        setActiveStage(2);
+        return () => {
+          tlRef.current = null;
+          flickerRef.current = null;
+        };
+      }
+
+      // Completa el 100% del timeline al llegar al cierre/footer del documento y convive con las flechas mobile
       const st = ScrollTrigger.create({
         trigger: document.documentElement,
         start: 'top top',
@@ -234,7 +236,7 @@ export const LabsScrollBackground: React.FC = () => {
           '+=' +
           Math.max(
             400,
-            Math.round((document.documentElement.scrollHeight - window.innerHeight) * 0.76)
+            Math.round((document.documentElement.scrollHeight - window.innerHeight) * 0.88)
           ),
         invalidateOnRefresh: true,
         onUpdate: (self) => {
@@ -246,21 +248,17 @@ export const LabsScrollBackground: React.FC = () => {
             }
           }
 
-          if (prefersReducedMotion) {
-            tl.progress(self.progress);
-          } else {
-            gsap.to(tl, {
-              progress: self.progress,
-              duration: 0.25,
-              ease: 'power1.out',
-              overwrite: 'auto',
-            });
-          }
+          gsap.to(tl, {
+            progress: self.progress,
+            duration: 0.25,
+            ease: 'power1.out',
+            overwrite: 'auto',
+          });
 
           syncFlicker(self.progress);
 
           const nextStage: 0 | 1 | 2 =
-            self.progress < 0.22 ? 0 : self.progress < 0.72 ? 1 : 2;
+            self.progress < 0.24 ? 0 : self.progress < 0.68 ? 1 : 2;
           setActiveStage((prev) => (prev === nextStage ? prev : nextStage));
         },
       });
@@ -297,12 +295,13 @@ export const LabsScrollBackground: React.FC = () => {
         aria-hidden="true"
         className="fixed inset-0 pointer-events-none z-0 overflow-hidden bg-[#F6F6F6] flex items-center justify-center lg:justify-end lg:pr-4 xl:pr-8"
       >
-        <svg
-          viewBox="0 0 1280 720"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          className="w-[115%] max-w-none sm:w-full sm:max-w-[920px] xl:max-w-[1040px] h-auto opacity-35 sm:opacity-35 lg:opacity-45 select-none"
-        >
+        <div className="relative w-[115%] max-w-none sm:w-full sm:max-w-[920px] xl:max-w-[1040px] aspect-[16/9] opacity-35 sm:opacity-40 lg:opacity-45 select-none">
+          <svg
+            viewBox="0 0 1280 720"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            className="inline-vector-stage absolute inset-0 w-full h-full"
+          >
         <defs>
           <radialGradient id="videoBulbGlow" cx="50%" cy="50%" r="50%">
             <stop offset="0%" stopColor="#CC0000" stopOpacity="0.28" />
@@ -451,7 +450,7 @@ export const LabsScrollBackground: React.FC = () => {
         </g>
 
         {/* ============================================================ */}
-        {/* 3. TRAZOS DE BARRIDO EN TRANSICIÓN (00:03 - 00:04)            */}
+        {/* 3. TRAZOS DE BARRIDO EN TRANSICIÓN                           */}
         {/* ============================================================ */}
         <g className="sweep-trails" strokeLinecap="round">
           <path d="M515 305 Q640 295 760 285" stroke="#CC0000" strokeWidth="2.2" className="draw-trail" />
@@ -459,145 +458,24 @@ export const LabsScrollBackground: React.FC = () => {
           <path d="M515 365 Q660 390 810 385" stroke="#CC0000" strokeWidth="2" className="draw-trail" />
           <path d="M515 395 Q670 420 830 420" stroke="#1E1E1E" strokeWidth="1.5" strokeOpacity="0.45" className="draw-trail" />
         </g>
+          </svg>
 
-        {/* ============================================================ */}
-        {/* 4. PROTOTIPOS WIREFRAME DESKTOP + MOBILE (00:04 - 00:09)       */}
-        {/* ============================================================ */}
-        <g className="devices-stage">
-          {/* Desktop Monitor Wireframe */}
-          <g stroke="#1E1E1E" strokeLinejoin="round">
-            <rect
-              x="615"
-              y="185"
-              width="430"
-              height="270"
-              rx="12"
-              fill="#FFFFFF"
-              fillOpacity="0.82"
-              strokeWidth="2.4"
-              className="draw-dev-line"
-            />
-            <rect
-              x="631"
-              y="201"
-              width="398"
-              height="238"
-              rx="4"
-              fill="#F8F7F4"
-              strokeWidth="1.4"
-              className="draw-dev-line"
-            />
-            {/* Peana */}
-            <path
-              d="M792 455 L868 455 L878 505 L782 505 Z"
-              fill="#E2E0DA"
-              strokeWidth="2"
-              className="draw-dev-line"
-            />
-            <line
-              x1="748"
-              y1="505"
-              x2="912"
-              y2="505"
-              strokeWidth="2.6"
-              strokeLinecap="round"
-              className="draw-dev-line"
-            />
-          </g>
-
-          {/* Estructura interna Wireframe Desktop */}
-          <g stroke="#1E1E1E" strokeOpacity="0.55" strokeWidth="1.2">
-            {/* Barra superior */}
-            <line x1="631" y1="222" x2="1029" y2="222" className="draw-dev-line" />
-            <circle cx="644" cy="211" r="3" fill="#1E1E1E" fillOpacity="0.35" stroke="none" />
-            <circle cx="655" cy="211" r="3" fill="#1E1E1E" fillOpacity="0.35" stroke="none" />
-            <circle cx="666" cy="211" r="3" fill="#1E1E1E" fillOpacity="0.35" stroke="none" />
-
-            {/* Sidebar izquierda */}
-            <line x1="662" y1="222" x2="662" y2="439" className="draw-dev-line" />
-            <rect x="639" y="238" width="15" height="15" rx="2" fill="none" className="draw-dev-line" />
-            <rect x="639" y="264" width="15" height="15" rx="2" fill="none" className="draw-dev-line" />
-            <rect x="639" y="290" width="15" height="15" rx="2" fill="none" className="draw-dev-line" />
-
-            {/* Bloque principal con aspa de wireframe */}
-            <rect x="680" y="256" width="165" height="92" rx="3" fill="#EFECE6" className="draw-dev-line" />
-            <line x1="680" y1="256" x2="845" y2="348" strokeOpacity="0.3" className="draw-dev-line" />
-            <line x1="845" y1="256" x2="680" y2="348" strokeOpacity="0.3" className="draw-dev-line" />
-
-            {/* Columna derecha */}
-            <rect x="858" y="256" width="152" height="58" rx="3" fill="#EFECE6" className="draw-dev-line" />
-            <line x1="858" y1="328" x2="985" y2="328" className="draw-dev-line" />
-            <line x1="858" y1="342" x2="955" y2="342" className="draw-dev-line" />
-
-            {/* 3 Cajas inferiores */}
-            <rect x="680" y="362" width="96" height="62" rx="3" fill="#EFECE6" className="draw-dev-line" />
-            <rect x="788" y="362" width="96" height="62" rx="3" fill="#EFECE6" className="draw-dev-line" />
-            <rect x="896" y="362" width="114" height="62" rx="3" fill="#EFECE6" className="draw-dev-line" />
-          </g>
-
-          {/* Mobile Phone Wireframe superpuesto a la derecha */}
-          <g stroke="#1E1E1E" strokeLinejoin="round">
-            <rect
-              x="982"
-              y="322"
-              width="126"
-              height="232"
-              rx="18"
-              fill="#FFFFFF"
-              fillOpacity="0.92"
-              strokeWidth="2.4"
-              className="draw-dev-line"
-            />
-            <rect
-              x="991"
-              y="344"
-              width="108"
-              height="188"
-              rx="6"
-              fill="#F8F7F4"
-              strokeWidth="1.3"
-              className="draw-dev-line"
-            />
-            <line x1="1032" y1="333" x2="1058" y2="333" strokeWidth="2" strokeLinecap="round" className="draw-dev-line" />
-            <circle cx="1045" cy="542" r="4" fill="none" strokeWidth="1.4" className="draw-dev-line" />
-
-            {/* Contenido Wireframe Mobile */}
-            <rect x="1001" y="356" width="88" height="56" rx="3" fill="#EFECE6" strokeWidth="1.1" className="draw-dev-line" />
-            <line x1="1001" y1="356" x2="1089" y2="412" strokeOpacity="0.3" strokeWidth="1" className="draw-dev-line" />
-            <line x1="1089" y1="356" x2="1001" y2="412" strokeOpacity="0.3" strokeWidth="1" className="draw-dev-line" />
-            <line x1="1001" y1="426" x2="1075" y2="426" strokeWidth="1.4" className="draw-dev-line" />
-            <line x1="1001" y1="440" x2="1055" y2="440" strokeWidth="1.2" strokeOpacity="0.5" className="draw-dev-line" />
-            <rect x="1001" y="456" width="40" height="46" rx="3" fill="#EFECE6" strokeWidth="1.1" className="draw-dev-line" />
-            <rect x="1049" y="456" width="40" height="46" rx="3" fill="#EFECE6" strokeWidth="1.1" className="draw-dev-line" />
-          </g>
-        </g>
-
-        {/* ============================================================ */}
-        {/* 5. LÍNEAS INFERIORES CON NODOS Y ACENTOS ROJOS (00:07 - 00:10) */}
-        {/* ============================================================ */}
-        <g className="bottom-lines-stage">
-          <g stroke="#1E1E1E" strokeOpacity="0.55" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M368 506 L368 575 L465 575" className="draw-bottom" />
-            <path d="M388 506 L388 552 L530 552 L530 610" className="draw-bottom" />
-            <path d="M408 506 L408 532 L645 532 L645 585 L895 585" className="draw-bottom" />
-            <path d="M815 505 L815 548 L965 548" className="draw-bottom" />
-          </g>
-
-          {/* Segmentos rojos en las líneas inferiores */}
-          <g stroke="#CC0000" strokeWidth="3.8" strokeLinecap="round">
-            <line x1="485" y1="552" x2="515" y2="552" className="draw-bottom" />
-            <line x1="765" y1="585" x2="825" y2="585" className="draw-bottom" />
-          </g>
-
-          {/* Pequeños nodos circulares */}
-          <g stroke="#1E1E1E" strokeWidth="1.4" fill="#F4F3EE">
-            <circle cx="465" cy="575" r="4" className="draw-bottom" />
-            <circle cx="530" cy="610" r="4" className="draw-bottom" />
-            <circle cx="895" cy="585" r="4" className="draw-bottom" />
-            <circle cx="965" cy="548" r="4" className="draw-bottom" />
-          </g>
-        </g>
-      </svg>
+          {/* ============================================================ */}
+          {/* 4. CIERRE FINAL HD (/images/labs/alicari-labs-final-hd.svg)  */}
+          {/* ============================================================ */}
+          <img
+            src="/images/labs/alicari-labs-final-hd.svg"
+            alt=""
+            decoding="async"
+            className="final-hd-stage absolute inset-0 w-full h-full object-contain pointer-events-none select-none"
+            style={{
+              WebkitMaskImage:
+                'radial-gradient(ellipse 78% 78% at 50% 50%, #000 68%, transparent 100%)',
+              maskImage:
+                'radial-gradient(ellipse 78% 78% at 50% 50%, #000 68%, transparent 100%)',
+            }}
+          />
+        </div>
       </div>
 
       {/* Control discreto paso a paso para mobile (< 768px) */}

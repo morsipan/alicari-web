@@ -208,7 +208,7 @@ export const LabsApp: React.FC = () => {
               <span className="w-1.5 h-1.5 rounded-full bg-[#cc0000]" aria-hidden="true" />
               <span>
                 <span className="lowercase">alicari labs</span>
-                <span className="uppercase"> · AI Developer · Diseño Multimedia & UX/UI</span>
+                <span className="uppercase"> · AI Software Engineer · Diseño Multimedia & UX/UI</span>
               </span>
             </p>
 
@@ -220,8 +220,8 @@ export const LabsApp: React.FC = () => {
 
             <p className="text-base sm:text-lg text-[#3a3a3a] font-light leading-relaxed mb-8 bg-[#F6F6F6]/80 backdrop-blur-[2px] rounded-xl p-3 -mx-3">
               alicari labs reúne los desarrollos propios que construyo como{' '}
-              <strong className="font-medium text-[#010101]">AI Developer</strong>, apalancados en mi
-              experiencia en{' '}
+              <strong className="font-medium text-[#010101]">AI Software Engineer</strong>, respaldado
+              por mi base en{' '}
               <strong className="font-medium text-[#010101]">Diseño Multimedia y UX/UI</strong>. Cada
               plataforma nace de un problema operativo concreto y se resuelve combinando arquitectura
               de producto, automatización e interfaces claras sin fricción.
@@ -230,7 +230,7 @@ export const LabsApp: React.FC = () => {
             <dl className="grid grid-cols-2 sm:grid-cols-4 gap-y-4 gap-x-5 pt-5 border-t border-[#dedbd3]/90 bg-[#F6F6F6]/75 backdrop-blur-[2px] rounded-xl p-3 -mx-3">
               <div>
                 <dt className="text-[10px] uppercase tracking-[0.12em] text-[#78756e] mb-1">Perfil</dt>
-                <dd className="text-xs sm:text-sm font-medium text-[#010101] m-0">AI Developer + UX/UI</dd>
+                <dd className="text-xs sm:text-sm font-medium text-[#010101] m-0">AI Engineer + UX/UI</dd>
               </div>
               <div>
                 <dt className="text-[10px] uppercase tracking-[0.12em] text-[#78756e] mb-1">Foco</dt>
